@@ -188,7 +188,16 @@ export default function Home() {
           });
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      toast({
+        position: 'bottom-left',
+        render: () => (
+          <Box color='white' p={3} bg='red.500'>
+            {err}
+          </Box>
+        )
+      });
+    }
     setIsApproveTxPending(false);
   };
 
@@ -216,7 +225,16 @@ export default function Home() {
           });
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      toast({
+        position: 'bottom-left',
+        render: () => (
+          <Box color='white' p={3} bg='red.500'>
+            {err}
+          </Box>
+        )
+      });
+    }
     setIsStakeTxPending(false);
   };
 
