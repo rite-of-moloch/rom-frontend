@@ -9,8 +9,6 @@ export const CountdownTimer = ({ targetDate }) => {
   const color = `hsl(347, ${Math.floor(
     100 - (secondsLeft / sixMonthsInSeconds) * 100
   )}%, 50%)`;
-  console.log('color', color);
-  console.log('secondsLeft', secondsLeft);
 
   if (days + hours + minutes + seconds <= 0) {
     return <ExpiredNotice />;
