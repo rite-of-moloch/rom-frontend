@@ -178,6 +178,13 @@ export default function Home() {
         if (status === 1) {
           await fetchAllowance();
         } else {
+          toast({
+            render: () => (
+              <Box color='white' p={3} bg='red.500'>
+                'Transaction failed.'
+              </Box>
+            )
+          });
         }
       }
     } catch (err) {}
