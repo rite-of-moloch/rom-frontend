@@ -30,6 +30,7 @@ import { AppContext } from "../context/AppContext";
 import { CONTRACT_ADDRESSES, TOKEN_TICKER } from "../utils/constants";
 import { SUPPORTED_NETWORK_IDS } from "../config";
 
+
 const StyledButton = styled(Button)`
   height: 50px;
   width: 100%;
@@ -136,7 +137,7 @@ export default function Home() {
         >
           <i className="fa-solid fa-circle-info"></i> View your{" "}
           <ChakraLink
-            href={`https://rinkeby.etherscan.io/tx/${txHash}`}
+            href={`${EXPLORER_URLS[context.chainId]}/tx/${txHash}`}
             isExternal
             textDecoration="underline"
             cursor="pointer"
@@ -364,6 +365,7 @@ export default function Home() {
                         utils.formatUnits(minimumStake, "ether") ||
                       utils.formatUnits(raidBalance, "ether") <
                         utils.formatUnits(minimumStake, "ether")
+
                     }
                     onClick={depositStake}
                     _hover={{
