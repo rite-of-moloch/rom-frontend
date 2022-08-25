@@ -27,7 +27,7 @@ import {
 } from '../utils/web3';
 
 import { AppContext } from '../context/AppContext';
-import { CONTRACT_ADDRESSES, TOKEN_TICKER } from '../utils/constants';
+import { CONTRACT_ADDRESSES, TOKEN_TICKER, EXPLORER_URLS } from '../utils/constants';
 import { SUPPORTED_NETWORK_IDS } from '../config';
 import { CountdownTimer } from '../shared/CountdownTimer';
 
