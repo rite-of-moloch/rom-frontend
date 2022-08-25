@@ -26,4 +26,18 @@ export const EXPLORER_URLS = {
   100: 'https://blockscout.com/xdai/mainnet'
 };
 
-export const sixMonthsInSeconds = 60 * 60 * 24 * 30 * 6;
+const secondsInADay = 60 * 60 * 24;
+
+export const msInADay = secondsInADay * 1000;
+
+export const sixMonthsInSeconds = secondsInADay * 30 * 6;
+
+export const getReturnValues = (countDown) => {
+  const days = Math.floor(countDown / msInADay);
+  const hours = Math.floor((countDown % msInADay) / (1000 * 60 * 60));
+  const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
+  const secondsLeft = countDown / 1000;
+
+  return [days, hours, minutes, seconds, secondsLeft];
+};

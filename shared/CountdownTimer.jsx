@@ -26,11 +26,12 @@ export const CountdownTimer = ({ targetDate }) => {
 
 const ExpiredNotice = () => {
   return (
-    <Flex my={6}>
-      <Heading color="red.500" fontFamily={"rubik"}>
-        You have been sacrificed to the great Moloch.
-      </Heading>
-    </Flex>
+    <Box textAlign='center' my={6} color='red.600' fontSize={30}>
+      <Text>Your deeds have not been proven worthy, mortal. </Text>
+      <Text>
+        Your soul has been sacrificed to Moloch and your jewels slashed.
+      </Text>
+    </Box>
   );
 };
 
