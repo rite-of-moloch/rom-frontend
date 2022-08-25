@@ -20,3 +20,8 @@ export const TOKEN_TICKER = {
   4: 'mRAID',
   100: 'RAID'
 };
+
+export const EXPLORER_URLS = {
+  4: "https://rinkeby.etherscan.io",
+  100: "https://blockscout.com/xdai/mainnet",
+};
