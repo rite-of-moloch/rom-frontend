@@ -60,7 +60,7 @@ export default function Home() {
   const [isStakeTxPending, setIsStakeTxPending] = useState(false);
 
   const [isChecked, setIsChecked] = useState(false);
-  const [cohortAddress, setCohortAddress] = useState(null);
+  const [cohortAddress, setCohortAddress] = useState('');
 
   const initialFetch = async () => {
     setIsLoading(true);
@@ -151,12 +151,7 @@ export default function Home() {
   };
 
   const handleIsChecked = () => {
-    setIsChecked((wasChecked) => {
-      if (wasChecked) {
-        setCohortAddress(null);
-      }
-      return !wasChecked;
-    });
+    setIsChecked(!isChecked);
   };
 
   const handlCohortAddress = (e) => {
@@ -193,7 +188,7 @@ export default function Home() {
         position: 'bottom-left',
         render: () => (
           <Box color='white' p={3} bg='red.500'>
-            {err}
+            {err.message}
           </Box>
         )
       });
@@ -202,12 +197,29 @@ export default function Home() {
   };
 
   const depositStake = async () => {
+    //Check if cohortAddress is an actual address
+    if (cohortAddress != '' && isChecked) {
+      if (!utils.isAddress(cohortAddress)) {
+        toast({
+          position: "bottom-left",
+          duration: 5000,
+          render: () => (
+            <Box color='white' p={3} bg='red.500'>
+              Wrong sponsor's address
+            </Box>
+          ),
+        });
+        return;
+      }
+    }
+
+    //Start stake process
     setIsStakeTxPending(true);
     try {
       const tx = await joinInitiation(
         context.ethersProvider,
         CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        cohortAddress ? cohortAddress : context.signerAddress
+        (cohortAddress != '' && isChecked) ? cohortAddress : context.signerAddress
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -219,7 +231,7 @@ export default function Home() {
             position: 'bottom-left',
             render: () => (
               <Box color='white' p={3} bg='red.500'>
-                'Transaction failed.'
+                Transaction failed.
               </Box>
             )
           });
@@ -230,7 +242,7 @@ export default function Home() {
         position: 'bottom-left',
         render: () => (
           <Box color='white' p={3} bg='red.500'>
-            {err}
+            {err.message}
           </Box>
         )
       });
@@ -355,12 +367,13 @@ export default function Home() {
                     fontSize='.8rem'
                     ml='1em'
                   >
-                    Sponsor a Cohort
+                    Sponsor a Cohort member
                   </Text>
                 </Flex>
                 <Input
                   onChange={handlCohortAddress}
-                  placeholder='Input Cohort Wallet Address or ENS'
+                  placeholder="Sponsor's member wallet address or ENS"
+                  value={cohortAddress}
                   _placeholder={{ color: 'white', fontSize: 'sm' }}
                   display={isChecked ? 'inline' : 'none'}
                   bg='#741739'
