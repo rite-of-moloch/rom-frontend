@@ -179,6 +179,7 @@ export default function Home() {
           await fetchAllowance();
         } else {
           toast({
+            position: 'bottom-left',
             render: () => (
               <Box color='white' p={3} bg='red.500'>
                 'Transaction failed.'
@@ -206,6 +207,7 @@ export default function Home() {
           await fetchRiteBalance();
         } else {
           toast({
+            position: 'bottom-left',
             render: () => (
               <Box color='white' p={3} bg='red.500'>
                 'Transaction failed.'
