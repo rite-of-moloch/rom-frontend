@@ -22,6 +22,22 @@ export const TOKEN_TICKER = {
 };
 
 export const EXPLORER_URLS = {
-  4: "https://rinkeby.etherscan.io",
-  100: "https://blockscout.com/xdai/mainnet",
+  4: 'https://rinkeby.etherscan.io',
+  100: 'https://blockscout.com/xdai/mainnet'
+};
+
+const secondsInADay = 60 * 60 * 24;
+
+export const msInADay = secondsInADay * 1000;
+
+export const sixMonthsInSeconds = secondsInADay * 30 * 6;
+
+export const getReturnValues = (countDown) => {
+  const days = Math.floor(countDown / msInADay);
+  const hours = Math.floor((countDown % msInADay) / (1000 * 60 * 60));
+  const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
+  const secondsLeft = countDown / 1000;
+
+  return [days, hours, minutes, seconds, secondsLeft];
 };
