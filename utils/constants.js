@@ -22,6 +22,8 @@ export const TOKEN_TICKER = {
 };
 
 export const EXPLORER_URLS = {
-  4: "https://rinkeby.etherscan.io",
-  100: "https://blockscout.com/xdai/mainnet",
+  4: 'https://rinkeby.etherscan.io',
+  100: 'https://blockscout.com/xdai/mainnet'
 };
+
+export const sixMonthsInSeconds = 60 * 60 * 24 * 30 * 6;

@@ -24,8 +24,9 @@ import {
 } from '../utils/web3';
 
 import { AppContext } from '../context/AppContext';
-import { CONTRACT_ADDRESSES, EXPLORER_URLS, TOKEN_TICKER } from '../utils/constants';
+import { CONTRACT_ADDRESSES, TOKEN_TICKER } from '../utils/constants';
 import { SUPPORTED_NETWORK_IDS } from '../config';
+import { CountdownTimer } from '../shared/CountdownTimer';
 
 const StyledButton = styled(Button)`
   height: 50px;
@@ -84,6 +85,7 @@ export default function Home() {
       CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
       context.signerAddress
     );
+    // setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // for rinkeby testing
     setStakeDeadline(Number(_stakeDeadline));
   };
 
@@ -157,12 +159,9 @@ export default function Home() {
         if (status === 1) {
           await fetchAllowance();
         } else {
-          console.log('Transaction failed');
         }
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
     setIsApproveTxPending(false);
   };
 
@@ -180,12 +179,9 @@ export default function Home() {
         if (status === 1) {
           await fetchRiteBalance();
         } else {
-          console.log('Transaction failed');
         }
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
     setIsStakeTxPending(false);
   };
 
@@ -251,6 +247,9 @@ export default function Home() {
                 <Text color='white' fontFamily='jetbrains' fontSize='.8rem'>
                   Deadline - {new Date(stakeDeadline * 1000).toLocaleString()}
                 </Text>
+                <CountdownTimer
+                  targetDate={new Date(stakeDeadline * 1000).getTime()}
+                />
               </Flex>
             ) : (
               <Flex
@@ -314,9 +313,9 @@ export default function Home() {
                     loadingText='Staking...'
                     disabled={
                       utils.formatUnits(allowance, 'ether') <
-                      utils.formatUnits(minimumStake, 'ether') ||
+                        utils.formatUnits(minimumStake, 'ether') ||
                       utils.formatUnits(raidBalance, 'ether') <
-                      utils.formatUnits(minimumStake, 'ether')
+                        utils.formatUnits(minimumStake, 'ether')
                     }
                     onClick={depositStake}
                     _hover={{
