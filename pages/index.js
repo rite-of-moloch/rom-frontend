@@ -27,7 +27,7 @@ import {
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
-import { CONTRACT_ADDRESSES, TOKEN_TICKER } from "../utils/constants";
+import { CONTRACT_ADDRESSES, TOKEN_TICKER, EXPLORER_URLS } from "../utils/constants";
 import { SUPPORTED_NETWORK_IDS } from "../config";
 
 
@@ -150,7 +150,12 @@ export default function Home() {
   };
 
   const handleIsChecked = () => {
-    setIsChecked(!isChecked);
+    setIsChecked(wasChecked => {
+      if(wasChecked) {
+        setCohortAddress(null);
+      }
+      return (!wasChecked)
+    });
   };
 
   const handlCohortAddress = (e) => {
@@ -362,9 +367,9 @@ export default function Home() {
                     loadingText="Staking..."
                     disabled={
                       utils.formatUnits(allowance, "ether") <
-                        utils.formatUnits(minimumStake, "ether") ||
+                      utils.formatUnits(minimumStake, "ether") ||
                       utils.formatUnits(raidBalance, "ether") <
-                        utils.formatUnits(minimumStake, "ether")
+                      utils.formatUnits(minimumStake, "ether")
 
                     }
                     onClick={depositStake}
