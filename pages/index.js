@@ -186,7 +186,7 @@ export default function Home() {
       const tx = await joinInitiation(
         context.ethersProvider,
         CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        context.signerAddress
+        cohortAddress ? cohortAddress : context.signerAddress
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -218,24 +218,6 @@ export default function Home() {
       fontFamily="spaceMono"
       px="2rem"
     >
-      <Heading as="h1" size="4xl" color="white" my="0.5em" textAlign="center">
-        Slay or be Slayed
-      </Heading>
-      <Heading
-        as="h2"
-        fontSize={{ md: "1.5em", sm: "1em" }}
-        color="white"
-        mt="8"
-        mb="16"
-        w={{ md: "80%", sm: "100%" }}
-        textAlign="center"
-        fontStyle="italic"
-      >
-        In the book of life, that was yesterday. In Moloch’s realm, the laws of
-        nature were rewritten. It is a new world order, where your soul is bound
-        to your actions and any transgressions will be punished by an eternity
-        spent in torment
-      </Heading>
       <Text
         w="100%"
         bg="purple"
