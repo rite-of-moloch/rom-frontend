@@ -386,7 +386,7 @@ export default function Home() {
                 </Flex>
                 <Input
                   onChange={handleCohortAddress}
-                  placeholder="Sponsor's member wallet address or ENS"
+                  placeholder="Sponsor's member wallet address"
                   value={cohortAddress}
                   _placeholder={{ color: 'white', fontSize: 'sm' }}
                   display={isChecked ? 'inline' : 'none'}
