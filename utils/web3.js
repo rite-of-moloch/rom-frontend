@@ -9,7 +9,7 @@ export const approveRaid = async (
   amount
 ) => {
   const abiInterface = new utils.Interface([
-    'function approve(address spender, uint256 amount) public virtual override returns (bool)'
+    'function approve(address spender, uint256 amount) external returns (bool)'
   ]);
   const contract = new Contract(
     contractAddress,
@@ -41,7 +41,7 @@ export const getTokenBalance = async (
   tokenContractAddress
 ) => {
   const abiInterface = new utils.Interface([
-    'function balanceOf(address owner) public view virtual override returns (uint256)'
+    'function balanceOf(address owner) external view returns (uint256)'
   ]);
   const contract = new Contract(
     tokenContractAddress,
@@ -53,7 +53,7 @@ export const getTokenBalance = async (
 
 export const getMinimumStake = async (ethersProvider, contractAddress) => {
   const abiInterface = new utils.Interface([
-    'function minimumStake() public view returns (uint256)'
+    'function minimumStake() external view returns (uint256)'
   ]);
   const contract = new Contract(contractAddress, abiInterface, ethersProvider);
   return contract.minimumStake();
@@ -65,7 +65,7 @@ export const getStakeDeadline = async (
   userAddress
 ) => {
   const abiInterface = new utils.Interface([
-    'function getDeadline(address user) public view returns (uint256)'
+    'function getDeadline(address user) external view returns (uint256)'
   ]);
   const contract = new Contract(contractAddress, abiInterface, ethersProvider);
   return contract.getDeadline(userAddress);
@@ -78,7 +78,7 @@ export const getAllowance = async (
   spenderAddress
 ) => {
   const abiInterface = new utils.Interface([
-    'function allowance(address owner, address spender) public view virtual override returns (uint256)'
+    'function allowance(address owner, address spender) external view returns (uint256)'
   ]);
   const contract = new Contract(
     tokenContractAddress,

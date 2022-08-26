@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Flex,
-  Heading,
   Text,
   Box,
   Button,
@@ -11,10 +10,11 @@ import {
   HStack,
   useToast,
   Checkbox,
-  Input
+  Input,
+  Tooltip
 } from '@chakra-ui/react';
 import { useState, useEffect, useContext } from 'react';
-import { utils } from 'ethers';
+import { ethers, utils } from 'ethers';
 import styled from '@emotion/styled';
 
 import {
@@ -154,7 +154,7 @@ export default function Home() {
     setIsChecked(!isChecked);
   };
 
-  const handlCohortAddress = (e) => {
+  const handleCohortAddress = (e) => {
     setCohortAddress(e.target.value);
   };
 
@@ -255,6 +255,20 @@ export default function Home() {
       initialFetch();
     }
   }, [context.chainId]);
+
+  const canStake =
+    utils.formatUnits(allowance, 'ether') >
+      utils.formatUnits(minimumStake, 'ether') &&
+    utils.formatUnits(raidBalance, 'ether') >
+      utils.formatUnits(minimumStake, 'ether') &&
+    !ethers.utils.isAddress(cohortAddress);
+
+  const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
+    ? 'Please input a valid wallet address'
+    : utils.formatUnits(allowance, 'ether') <
+      utils.formatUnits(minimumStake, 'ether')
+    ? 'Allowance is smaller than the minimum stake amount.'
+    : 'Your RAID balance is too low';
 
   return (
     <Flex
@@ -371,7 +385,7 @@ export default function Home() {
                   </Text>
                 </Flex>
                 <Input
-                  onChange={handlCohortAddress}
+                  onChange={handleCohortAddress}
                   placeholder="Sponsor's member wallet address or ENS"
                   value={cohortAddress}
                   _placeholder={{ color: 'white', fontSize: 'sm' }}
@@ -405,24 +419,25 @@ export default function Home() {
                   >
                     Approve
                   </StyledButton>
-                  <StyledButton
-                    bg='red'
-                    color='black'
-                    isLoading={isStakeTxPending}
-                    loadingText='Staking...'
-                    disabled={
-                      utils.formatUnits(allowance, 'ether') <
-                        utils.formatUnits(minimumStake, 'ether') ||
-                      utils.formatUnits(raidBalance, 'ether') <
-                        utils.formatUnits(minimumStake, 'ether')
-                    }
-                    onClick={depositStake}
-                    _hover={{
-                      opacity: 0.8
-                    }}
+                  <Tooltip
+                    isDisabled={canStake}
+                    label={canNotStakeTooltipLabel}
+                    shouldWrapChildren
                   >
-                    Stake
-                  </StyledButton>
+                    <StyledButton
+                      bg='red'
+                      color='black'
+                      isLoading={isStakeTxPending}
+                      loadingText='Staking...'
+                      disabled={!canStake}
+                      onClick={depositStake}
+                      _hover={{
+                        opacity: 0.8
+                      }}
+                    >
+                      Stake
+                    </StyledButton>
+                  </Tooltip>
                 </Flex>
               </Flex>
             ))}
