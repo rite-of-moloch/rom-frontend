@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import Link from "next/link";
 import {
   Flex,
   Heading,
@@ -11,11 +12,11 @@ import {
   HStack,
   useToast,
   Checkbox,
-  Input
-} from '@chakra-ui/react';
-import { useState, useEffect, useContext } from 'react';
-import { utils } from 'ethers';
-import styled from '@emotion/styled';
+  Input,
+} from "@chakra-ui/react";
+import { useState, useEffect, useContext } from "react";
+import { utils } from "ethers";
+import styled from "@emotion/styled";
 
 import {
   getMinimumStake,
@@ -23,20 +24,20 @@ import {
   getStakeDeadline,
   getAllowance,
   approveRaid,
-  joinInitiation
-} from '../utils/web3';
+  joinInitiation,
+} from "../utils/web3";
 
-import { AppContext } from '../context/AppContext';
-import { CONTRACT_ADDRESSES, TOKEN_TICKER } from '../utils/constants';
-import { SUPPORTED_NETWORK_IDS } from '../config';
-import { CountdownTimer } from '../shared/CountdownTimer';
+import { AppContext } from "../context/AppContext";
+import { CONTRACT_ADDRESSES, TOKEN_TICKER } from "../utils/constants";
+import { SUPPORTED_NETWORK_IDS } from "../config";
+import { CountdownTimer } from "../shared/CountdownTimer";
 
 const StyledButton = styled(Button)`
   height: 50px;
   width: 100%;
-  border-radius: '2px';
-  padding-left: '24px';
-  padding-right: '24px';
+  border-radius: "2px";
+  padding-left: "24px";
+  padding-right: "24px";
 `;
 
 const StyledHStack = styled(HStack)`
@@ -124,29 +125,29 @@ export default function Home() {
 
   const triggerToast = (txHash) => {
     toast({
-      position: 'bottom-left',
+      position: "bottom-left",
       duration: 9000,
       render: () => (
         <Box
-          color='white'
-          fontFamily='spaceMono'
-          fontSize='.8rem'
-          bg='blackLight'
-          p='15px'
-          borderRadius='10px'
-          width='auto'
+          color="white"
+          fontFamily="spaceMono"
+          fontSize=".8rem"
+          bg="blackLight"
+          p="15px"
+          borderRadius="10px"
+          width="auto"
         >
-          <i className='fa-solid fa-circle-info'></i> View your{' '}
+          <i className="fa-solid fa-circle-info"></i> View your{" "}
           <ChakraLink
             href={`${EXPLORER_URLS[context.chainId]}/tx/${txHash}`}
             isExternal
-            textDecoration='underline'
-            cursor='pointer'
+            textDecoration="underline"
+            cursor="pointer"
           >
             transaction
           </ChakraLink>
         </Box>
-      )
+      ),
     });
   };
 
@@ -179,23 +180,23 @@ export default function Home() {
           await fetchAllowance();
         } else {
           toast({
-            position: 'bottom-left',
+            position: "bottom-left",
             render: () => (
-              <Box color='white' p={3} bg='red.500'>
+              <Box color="white" p={3} bg="red.500">
                 'Transaction failed.'
               </Box>
-            )
+            ),
           });
         }
       }
     } catch (err) {
       toast({
-        position: 'bottom-left',
+        position: "bottom-left",
         render: () => (
-          <Box color='white' p={3} bg='red.500'>
+          <Box color="white" p={3} bg="red.500">
             {err}
           </Box>
-        )
+        ),
       });
     }
     setIsApproveTxPending(false);
@@ -216,23 +217,23 @@ export default function Home() {
           await fetchRiteBalance();
         } else {
           toast({
-            position: 'bottom-left',
+            position: "bottom-left",
             render: () => (
-              <Box color='white' p={3} bg='red.500'>
+              <Box color="white" p={3} bg="red.500">
                 'Transaction failed.'
               </Box>
-            )
+            ),
           });
         }
       }
     } catch (err) {
       toast({
-        position: 'bottom-left',
+        position: "bottom-left",
         render: () => (
-          <Box color='white' p={3} bg='red.500'>
+          <Box color="white" p={3} bg="red.500">
             {err}
           </Box>
-        )
+        ),
       });
     }
     setIsStakeTxPending(false);
@@ -246,58 +247,82 @@ export default function Home() {
 
   return (
     <Flex
-      minH='350px'
-      minW='80%'
-      direction='column'
-      alignItems='center'
-      fontFamily='spaceMono'
-      px='2rem'
+      minH="350px"
+      minW="80%"
+      direction="column"
+      alignItems="center"
+      fontFamily="spaceMono"
+      px="2rem"
     >
       <Text
-        w='100%'
-        bg='purple'
-        p='15px'
-        fontFamily='rubik'
-        fontSize={{ lg: '1.2rem', sm: '1rem' }}
-        mb='2rem'
-        textAlign='center'
+        w="100%"
+        bg="purple"
+        p="15px"
+        fontFamily="rubik"
+        fontSize={{ lg: "1.2rem", sm: "1rem" }}
+        mb="2rem"
+        textAlign="center"
       >
         Cohort - Season 5
       </Text>
       {!context.signerAddress && (
-        <Text color='white' textAlign='center'>
+        <Text color="white" textAlign="center">
           Connect your wallet to stake & commit to our cohort!
+        </Text>
+      )}
+
+      <Link href="/deploy-cohort">
+        <Text
+          w="50%"
+          bg="red"
+          p="15px"
+          fontFamily="rubik"
+          fontSize={{ lg: "1.2rem", sm: "1rem" }}
+          mt="6rem"
+          mb="2rem"
+          textAlign="center"
+          rounded="md"
+          _hover={{
+            cursor: "pointer",
+          }}
+        >
+          Deploy Your Own Cohort{" "}
+        </Text>
+      </Link>
+      {!context.signerAddress && (
+        <Text color="white" textAlign="center">
+          Deploy your own Cohort to begin slaying Moloch for your DAO today!
         </Text>
       )}
 
       {context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS && (
         <>
-          {isLoading && <Spinner color='red' size='xl' />}
+          {isLoading && <Spinner color="red" size="xl" />}
           {!isLoading &&
             (riteBalance > 0 ? (
               <Flex
-                w='100%'
-                direction='column'
-                alignItems='center'
-                justifyContent='space-between'
-                p='15px'
+                w="100%"
+                direction="column"
+                alignItems="center"
+                justifyContent="space-between"
+                p="15px"
               >
                 <ChakraImage
-                  src='/assets/token_img.jpg'
-                  w='150px'
-                  borderRadius='20px'
-                  mb='2rem'
-                  alt='Rite Token'
+                  src="/assets/token_img.jpg"
+                  w="150px"
+                  borderRadius="20px"
+                  mb="2rem"
+                  alt="Rite Token"
                 />
 
                 <Text
-                  color='red'
-                  fontSize={{ lg: '1.2rem', sm: '1rem' }}
-                  mb='5px'
+                  color="red"
+                  fontSize={{ lg: "1.2rem", sm: "1rem" }}
+                  mb="5px"
                 >
                   You own a stake for {Number(riteBalance)} RITE
                 </Text>
-                <Text color='white' fontFamily='jetbrains' fontSize='.8rem'>
+                <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
                   Deadline - {new Date(stakeDeadline * 1000).toLocaleString()}
                 </Text>
                 <CountdownTimer
@@ -306,43 +331,43 @@ export default function Home() {
               </Flex>
             ) : (
               <Flex
-                w='100%'
-                direction='column'
-                alignItems='flex-start'
-                p='15px'
+                w="100%"
+                direction="column"
+                alignItems="flex-start"
+                p="15px"
               >
-                <StyledHStack mb='1rem'>
-                  <Text color='red' fontSize={{ lg: '1.2rem', sm: '.8rem' }}>
+                <StyledHStack mb="1rem">
+                  <Text color="red" fontSize={{ lg: "1.2rem", sm: ".8rem" }}>
                     Required Stake
                   </Text>
-                  <Text color='white' fontSize={{ lg: '1.2rem', sm: '.8rem' }}>
-                    {utils.formatUnits(minimumStake, 'ether')}{' '}
+                  <Text color="white" fontSize={{ lg: "1.2rem", sm: ".8rem" }}>
+                    {utils.formatUnits(minimumStake, "ether")}{" "}
                     {TOKEN_TICKER[context.chainId]}
                   </Text>
                 </StyledHStack>
                 <StyledHStack>
-                  <Text color='red' fontFamily='jetbrains' fontSize='.8rem'>
+                  <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
                     Your {TOKEN_TICKER[context.chainId]} balance
                   </Text>
-                  <Text color='white' fontSize='.8rem'>
-                    {utils.formatUnits(raidBalance, 'ether')}{' '}
+                  <Text color="white" fontSize=".8rem">
+                    {utils.formatUnits(raidBalance, "ether")}{" "}
                     {TOKEN_TICKER[context.chainId]}
                   </Text>
                 </StyledHStack>
                 <StyledHStack>
-                  <Text color='red' fontFamily='jetbrains' fontSize='.8rem'>
+                  <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
                     Your {TOKEN_TICKER[context.chainId]} allowance
                   </Text>
-                  <Text color='white' fontSize='.8rem'>
-                    {utils.formatUnits(allowance, 'ether')}{' '}
+                  <Text color="white" fontSize=".8rem">
+                    {utils.formatUnits(allowance, "ether")}{" "}
                     {TOKEN_TICKER[context.chainId]}
                   </Text>
                 </StyledHStack>
                 <Flex
-                  flexDirection='row'
-                  alignItems='center'
-                  justifyContent='center'
-                  mt='2em'
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  mt="2em"
                 >
                   <Checkbox
                     defaultChecked
@@ -350,62 +375,62 @@ export default function Home() {
                     onChange={handleIsChecked}
                   />
                   <Text
-                    color='red'
-                    fontFamily='jetbrains'
-                    fontSize='.8rem'
-                    ml='1em'
+                    color="red"
+                    fontFamily="jetbrains"
+                    fontSize=".8rem"
+                    ml="1em"
                   >
                     Sponsor a Cohort
                   </Text>
                 </Flex>
                 <Input
                   onChange={handlCohortAddress}
-                  placeholder='Input Cohort Wallet Address or ENS'
-                  _placeholder={{ color: 'white', fontSize: 'sm' }}
-                  display={isChecked ? 'inline' : 'none'}
-                  bg='#741739'
-                  color='white'
-                  rounded='none'
-                  border='0px'
-                  opacity='none'
-                  width={{ md: '50%', sm: 'full' }}
-                  mt='1rem'
-                  fontSize='sm'
+                  placeholder="Input Cohort Wallet Address or ENS"
+                  _placeholder={{ color: "white", fontSize: "sm" }}
+                  display={isChecked ? "inline" : "none"}
+                  bg="#741739"
+                  color="white"
+                  rounded="none"
+                  border="0px"
+                  opacity="none"
+                  width={{ md: "50%", sm: "full" }}
+                  mt="1rem"
+                  fontSize="sm"
                 />
-                <Flex mt='2rem' w='100%'>
+                <Flex mt="2rem" w="100%">
                   <StyledButton
-                    bg='transparent'
-                    border='2px solid'
-                    borderColor='red'
-                    color='red'
-                    mr='1rem'
+                    bg="transparent"
+                    border="2px solid"
+                    borderColor="red"
+                    color="red"
+                    mr="1rem"
                     isLoading={isAppoveTxPending}
-                    loadingText='Approving...'
+                    loadingText="Approving..."
                     disabled={
-                      utils.formatUnits(allowance, 'ether') >=
-                      utils.formatUnits(minimumStake, 'ether')
+                      utils.formatUnits(allowance, "ether") >=
+                      utils.formatUnits(minimumStake, "ether")
                     }
                     onClick={makeAnAllowance}
                     _hover={{
-                      opacity: 0.8
+                      opacity: 0.8,
                     }}
                   >
                     Approve
                   </StyledButton>
                   <StyledButton
-                    bg='red'
-                    color='black'
+                    bg="red"
+                    color="black"
                     isLoading={isStakeTxPending}
-                    loadingText='Staking...'
+                    loadingText="Staking..."
                     disabled={
-                      utils.formatUnits(allowance, 'ether') <
-                        utils.formatUnits(minimumStake, 'ether') ||
-                      utils.formatUnits(raidBalance, 'ether') <
-                        utils.formatUnits(minimumStake, 'ether')
+                      utils.formatUnits(allowance, "ether") <
+                        utils.formatUnits(minimumStake, "ether") ||
+                      utils.formatUnits(raidBalance, "ether") <
+                        utils.formatUnits(minimumStake, "ether")
                     }
                     onClick={depositStake}
                     _hover={{
-                      opacity: 0.8
+                      opacity: 0.8,
                     }}
                   >
                     Stake
@@ -417,11 +442,11 @@ export default function Home() {
       )}
 
       {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
-        <Flex direction='column' alignItems='center'>
-          <Box fontSize='40px' color='red'>
-            <i className='fa-solid fa-circle-xmark'></i>
+        <Flex direction="column" alignItems="center">
+          <Box fontSize="40px" color="red">
+            <i className="fa-solid fa-circle-xmark"></i>
           </Box>
-          <Text fontFamily='spaceMono' color='white' fontSize='1.2rem'>
+          <Text fontFamily="spaceMono" color="white" fontSize="1.2rem">
             Unsupported network
           </Text>
         </Flex>

@@ -9,6 +9,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  NumberInput,
   Button,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
@@ -17,13 +18,13 @@ import { AppContext } from "../context/AppContext";
 export default function deployCohort() {
   const [daoAddress, setDaoAddress] = useState();
   const [duration, setDuration] = useState();
-  const [stakingAssetAddress, setStakingAssetAddress] = useState();
-  const [nameSBT, setNameSBT] = useState();
-  const [treasuryAddress, setTreasuryAddress] = useState();
+  const [stakingAsset, setStakingAsset] = useState();
+  const [name, setName] = useState();
+  const [treasury, setTreasury] = useState();
   const [tokenName, setTokenName] = useState();
-  const [thresholdShares, setThresholdSales] = useState();
-  const [minimumStaked, setMinimumStake] = useState();
-  const [baseURI, setBaseURI] = useState();
+  const [threshold, setThreshold] = useState();
+  const [minimumStaked, setMinimumStaked] = useState();
+  const [baseUri, setBaseUri] = useState();
 
   const handleDeployCohort = (e) => {
     e.preventDefault();
@@ -31,13 +32,13 @@ export default function deployCohort() {
     const membershipCriteria = {
       daoAddress,
       duration,
-      stakingAssetAddress,
-      nameSBT,
-      treasuryAddress,
+      stakingAsset,
+      name,
+      treasury,
       tokenName,
-      thresholdShares,
+      threshold,
       minimumStaked,
-      baseURI,
+      baseUri,
     };
     console.log(membershipCriteria);
   };
@@ -62,7 +63,7 @@ export default function deployCohort() {
       >
         Deploy Your Own Cohort
       </Text>
-      <FormControl onSubmit={handleDeployCohort}>
+      <FormControl>
         <Flex alignItems="center" justifyContent="center">
           <SimpleGrid
             columns={2}
@@ -76,6 +77,7 @@ export default function deployCohort() {
                 The contract address used to ascertain cohort completion
               </FormLabel>
               <Input
+                value={daoAddress}
                 onChange={(e) => setDaoAddress(e.target.value)}
                 type="text"
                 isRequired={true}
@@ -95,6 +97,7 @@ export default function deployCohort() {
                 Duration before cohort can be slashed
               </FormLabel>
               <Input
+                value={duration}
                 onChange={(e) => setDuration(e.target.value)}
                 type="number"
                 isRequired={true}
@@ -115,7 +118,8 @@ export default function deployCohort() {
                 contract
               </FormLabel>
               <Input
-                onChange={(e) => setStakingAssetAddress(e.target.value)}
+                value={stakingAsset}
+                onChange={(e) => setStakingAsset(e.target.value)}
                 placeholder="Input stakingAsset Address"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -133,7 +137,8 @@ export default function deployCohort() {
                 The name for the cohort's soul bound token (SBT)
               </FormLabel>
               <Input
-                onChange={(e) => setNameSBT(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Input name for SBT"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -151,7 +156,8 @@ export default function deployCohort() {
                 The address which received tokens when initiates are slashed
               </FormLabel>
               <Input
-                onChange={(e) => setTreasuryAddress(e.target.value)}
+                value={treasury}
+                onChange={(e) => setTreasury(e.target.value)}
                 placeholder="Input treasury Address"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -169,6 +175,7 @@ export default function deployCohort() {
                 The ticker symbol for cohort's soul bound token
               </FormLabel>
               <Input
+                value={tokenName}
                 onChange={(e) => setTokenName(e.target.value)}
                 placeholder="Input token name"
                 _placeholder={{ color: "white", fontSize: "sm" }}
@@ -187,6 +194,7 @@ export default function deployCohort() {
                 The minimum amount of criteria which constitues DAO membership
               </FormLabel>
               <Input
+                value={threshold}
                 onChange={(e) => setThresholdSales(e.target.value)}
                 placeholder="Input threshold or shares required"
                 _placeholder={{ color: "white", fontSize: "sm" }}
@@ -205,7 +213,8 @@ export default function deployCohort() {
                 The minimum amount of staking asset required to join the cohort
               </FormLabel>
               <Input
-                onChange={(e) => setMinimumStake(e.target.value)}
+                value={minimumStaked}
+                onChange={(e) => setMinimumStaked(e.target.value)}
                 placeholder="Input the minimum staked asset to join"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -224,7 +233,8 @@ export default function deployCohort() {
                 token metadata
               </FormLabel>
               <Input
-                onChange={(e) => setBaseURI(e.target.value)}
+                value={baseUri}
+                onChange={(e) => setBaseUri(e.target.value)}
                 placeholder="Input the baseuri for soul bound token metadata"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -240,6 +250,7 @@ export default function deployCohort() {
           </SimpleGrid>
         </Flex>
         <Button
+          onClick={handleDeployCohort}
           display="flex"
           bg="black"
           color="red"
