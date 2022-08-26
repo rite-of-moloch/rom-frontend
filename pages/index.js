@@ -36,6 +36,7 @@ import {
 import { SUPPORTED_NETWORK_IDS } from "../config";
 import { NetworkError } from "../shared/NetworkError";
 import { RiteStaked } from "../shared/RiteStaked";
+import { StakingFlow } from "../shared/StakingFlow";
 
 const StyledButton = styled(Button)`
   height: 50px;
@@ -263,9 +264,9 @@ export default function Home() {
   }, [context.chainId]);
 
   const canStake =
-    utils.formatUnits(allowance, "ether") >
+    utils.formatUnits(allowance, "ether") >=
       utils.formatUnits(minimumStake, "ether") &&
-    utils.formatUnits(raidBalance, "ether") >
+    utils.formatUnits(raidBalance, "ether") >=
       utils.formatUnits(minimumStake, "ether") &&
     !ethers.utils.isAddress(cohortAddress);
 
@@ -309,115 +310,22 @@ export default function Home() {
             (riteBalance > 0 ? (
               <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
             ) : (
-              <Flex
-                w="100%"
-                direction="column"
-                alignItems="flex-start"
-                p="15px"
-              >
-                <StyledHStack mb="1rem">
-                  <Text color="red" fontSize={{ lg: "1.2rem", sm: ".8rem" }}>
-                    Required Stake
-                  </Text>
-                  <Text color="white" fontSize={{ lg: "1.2rem", sm: ".8rem" }}>
-                    {utils.formatUnits(minimumStake, "ether")}{" "}
-                    {TOKEN_TICKER[context.chainId]}
-                  </Text>
-                </StyledHStack>
-                <StyledHStack>
-                  <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-                    Your {TOKEN_TICKER[context.chainId]} balance
-                  </Text>
-                  <Text color="white" fontSize=".8rem">
-                    {utils.formatUnits(raidBalance, "ether")}{" "}
-                    {TOKEN_TICKER[context.chainId]}
-                  </Text>
-                </StyledHStack>
-                <StyledHStack>
-                  <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-                    Your {TOKEN_TICKER[context.chainId]} allowance
-                  </Text>
-                  <Text color="white" fontSize=".8rem">
-                    {utils.formatUnits(allowance, "ether")}{" "}
-                    {TOKEN_TICKER[context.chainId]}
-                  </Text>
-                </StyledHStack>
-                <Flex
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  mt="2em"
-                >
-                  <Checkbox
-                    defaultChecked
-                    isChecked={isChecked}
-                    onChange={handleIsChecked}
-                  />
-                  <Text
-                    color="red"
-                    fontFamily="jetbrains"
-                    fontSize=".8rem"
-                    ml="1em"
-                  >
-                    Sponsor a Cohort member
-                  </Text>
-                </Flex>
-                <Input
-                  onChange={handleCohortAddress}
-                  placeholder="Sponsor's member wallet address"
-                  value={cohortAddress}
-                  _placeholder={{ color: "white", fontSize: "sm" }}
-                  display={isChecked ? "inline" : "none"}
-                  bg="#741739"
-                  color="white"
-                  rounded="none"
-                  border="0px"
-                  opacity="none"
-                  width={{ md: "50%", sm: "full" }}
-                  mt="1rem"
-                  fontSize="sm"
-                />
-                <Flex mt="2rem" w="100%">
-                  <StyledButton
-                    bg="transparent"
-                    border="2px solid"
-                    borderColor="red"
-                    color="red"
-                    mr="1rem"
-                    isLoading={isApproveTxPending}
-                    loadingText="Approving..."
-                    disabled={
-                      utils.formatUnits(allowance, "ether") >=
-                      utils.formatUnits(minimumStake, "ether")
-                    }
-                    onClick={makeAnAllowance}
-                    _hover={{
-                      opacity: 0.8,
-                    }}
-                  >
-                    Approve
-                  </StyledButton>
-                  <Tooltip
-                    isDisabled={canStake}
-                    label={canNotStakeTooltipLabel}
-                    shouldWrapChildren
-                  >
-                    <StyledButton
-                      bg="red"
-                      color="black"
-                      isLoading={isStakeTxPending}
-                      loadingText="Staking..."
-                      disabled={!canStake}
-                      onClick={depositStake}
-                      _hover={{
-                        opacity: 0.8,
-                      }}
-                    >
-                      Stake
-                    </StyledButton>
-                  </Tooltip>
-                </Flex>
-              </Flex>
+              <StakingFlow
+                minimumStake={minimumStake}
+                context={context}
+                raidBalance={raidBalance}
+                allowance={allowance}
+                isChecked={isChecked}
+                handleIsChecked={handleIsChecked}
+                cohortAddress={cohortAddress}
+                handleCohortAddress={handleCohortAddress}
+                isApproveTxPending={isApproveTxPending}
+                makeAnAllowance={makeAnAllowance}
+                canStake={canStake}
+                canNotStakeTooltipLabel={canNotStakeTooltipLabel}
+                isStakeTxPending={isStakeTxPending}
+                depositStake={depositStake}
+              />
             ))}
         </>
       )}

@@ -37,6 +37,12 @@ export const StakingFlow = ({
   handleIsChecked,
   cohortAddress,
   handleCohortAddress,
+  isApproveTxPending,
+  makeAnAllowance,
+  canStake,
+  canNotStakeTooltipLabel,
+  isStakeTxPending,
+  depositStake,
 }) => {
   return (
     <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
