@@ -5,16 +5,17 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  Button
-} from '@chakra-ui/react';
-import Link from 'next/link';
-import styled from '@emotion/styled';
-import { useContext } from 'react';
+  Button,
+} from "@chakra-ui/react";
+import Link from "next/link";
+import styled from "@emotion/styled";
+import { useContext } from "react";
+import { useRouter } from "next/router";
 
-import { AppContext } from '../context/AppContext';
-import { useWallet } from '../hooks/useWallet';
+import { AppContext } from "../context/AppContext";
+import { useWallet } from "../hooks/useWallet";
 
-import { SUPPORTED_NETWORK_IDS } from '../config';
+import { SUPPORTED_NETWORK_IDS } from "../config";
 
 const getAccountString = (account) => {
   const len = account.length;
@@ -36,69 +37,81 @@ const StyledPrimaryButton = styled(Button)`
 export const Header = () => {
   const context = useContext(AppContext);
   const { connectWallet, disconnect } = useWallet();
+  const router = useRouter();
 
   return (
     <Flex
-      h='100px'
-      w='100%'
-      alignItems='center'
-      justifyContent='space-between'
-      px='2rem'
+      h="100px"
+      w="100%"
+      alignItems="center"
+      justifyContent="space-between"
+      px="2rem"
     >
-      <Link href='/' passHref>
-        <Flex alignItems='center' cursor='pointer'>
+      <Link href="/" passHref>
+        <Flex alignItems="center" cursor="pointer">
           <Image
-            src='/assets/logos/swords.webp'
-            alt='logo'
-            w={{ lg: '50px', sm: '25px' }}
+            src="/assets/logos/swords.webp"
+            alt="logo"
+            w={{ lg: "50px", sm: "25px" }}
           />
-          <Text
-            color='red'
-            fontFamily='uncial'
-            fontSize={{ lg: '1.5rem', sm: '1rem' }}
-            ml='5px'
-          >
-            Rite of Moloch
-          </Text>
+          {router.pathname === "/deploy-cohort" ? (
+            <Text
+              color="red"
+              fontFamily="uncial"
+              fontSize={{ lg: "1.5rem", sm: "1rem" }}
+              ml="5px"
+            >
+              Moloch Cohort Deployer
+            </Text>
+          ) : (
+            <Text
+              color="red"
+              fontFamily="uncial"
+              fontSize={{ lg: "1.5rem", sm: "1rem" }}
+              ml="5px"
+            >
+              Rite of Moloch
+            </Text>
+          )}
         </Flex>
       </Link>
 
       {!context.signerAddress && (
         <StyledPrimaryButton
-          bg='red'
+          bg="red"
           onClick={connectWallet}
-          fontFamily='spaceMono'
+          fontFamily="spaceMono"
         >
           CONNECT
         </StyledPrimaryButton>
       )}
 
       {context.signerAddress && (
-        <Flex justify='center' align='center' zIndex={5} fontFamily='jetbrains'>
-          <Text color='white' fontFamily='jetbrains' mr='1rem' fontSize='.8rem'>
+        <Flex justify="center" align="center" zIndex={5} fontFamily="jetbrains">
+          <Text color="white" fontFamily="jetbrains" mr="1rem" fontSize=".8rem">
             {SUPPORTED_NETWORK_IDS[context.chainId]}
           </Text>
-          <Popover placement='bottom'>
+          <Popover placement="bottom">
             <PopoverTrigger>
               <Button
-                h='auto'
-                bg='blackDark'
-                fontWeight='normal'
-                _hover={{ opacity: '0.8' }}
+                h="auto"
+                bg="blackDark"
+                fontWeight="normal"
+                _hover={{ opacity: "0.8" }}
                 p={{ base: 0, md: 3 }}
               >
-                <Text px={2} display={{ md: 'flex' }} color='red'>
+                <Text px={2} display={{ md: "flex" }} color="red">
                   {getAccountString(context.signerAddress)}
                 </Text>
               </Button>
             </PopoverTrigger>
-            <PopoverContent bg='none' w='auto' border='none'>
+            <PopoverContent bg="none" w="auto" border="none">
               <Button
-                bg='red'
+                bg="red"
                 onClick={() => {
                   disconnect();
                 }}
-                mt='5px'
+                mt="5px"
               >
                 Disconnect
               </Button>
