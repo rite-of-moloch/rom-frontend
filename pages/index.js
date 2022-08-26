@@ -251,6 +251,13 @@ export default function Home() {
       utils.formatUnits(minimumStake, 'ether') &&
     !ethers.utils.isAddress(cohortAddress);
 
+  const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
+    ? 'Please input a valid wallet address'
+    : utils.formatUnits(allowance, 'ether') <
+      utils.formatUnits(minimumStake, 'ether')
+    ? 'Allowance is smaller than the minimum stake amount.'
+    : 'Your RAID balance is too low';
+
   return (
     <Flex
       minH='350px'
@@ -401,15 +408,7 @@ export default function Home() {
                   </StyledButton>
                   <Tooltip
                     isDisabled={canStake}
-                    label={
-                      utils.formatUnits(allowance, 'ether') <
-                      utils.formatUnits(minimumStake, 'ether')
-                        ? 'Allowance is smaller than the minimum stake amount.'
-                        : utils.formatUnits(raidBalance, 'ether') <
-                          utils.formatUnits(minimumStake, 'ether')
-                        ? 'Your RAID balance is too low'
-                        : 'Please input a valid wallet address'
-                    }
+                    label={canNotStakeTooltipLabel}
                     shouldWrapChildren
                   >
                     <StyledButton
