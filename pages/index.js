@@ -3,20 +3,13 @@ import React from "react";
 
 import {
   Flex,
-  Text,
   Box,
-  Button,
   Spinner,
   Link as ChakraLink,
-  HStack,
   useToast,
-  Checkbox,
-  Input,
-  Tooltip,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
 import { ethers, utils } from "ethers";
-import styled from "@emotion/styled";
 
 import {
   getMinimumStake,
@@ -28,29 +21,13 @@ import {
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
-import {
-  CONTRACT_ADDRESSES,
-  TOKEN_TICKER,
-  EXPLORER_URLS,
-} from "../utils/constants";
+import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 import { SUPPORTED_NETWORK_IDS } from "../config";
 import { NetworkError } from "../shared/NetworkError";
 import { RiteStaked } from "../shared/RiteStaked";
 import { StakingFlow } from "../shared/StakingFlow";
-
-const StyledButton = styled(Button)`
-  height: 50px;
-  width: 100%;
-  border-radius: "2px";
-  padding-left: "24px";
-  padding-right: "24px";
-`;
-
-const StyledHStack = styled(HStack)`
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-`;
+import { CohortHeader } from "../shared/CohortHeader";
+import { PreStake } from "../shared/PreStake";
 
 export default function Home() {
   const context = useContext(AppContext);
@@ -286,22 +263,8 @@ export default function Home() {
       fontFamily="spaceMono"
       px="2rem"
     >
-      <Text
-        w="100%"
-        bg="purple"
-        p="15px"
-        fontFamily="rubik"
-        fontSize={{ lg: "1.2rem", sm: "1rem" }}
-        mb="2rem"
-        textAlign="center"
-      >
-        Cohort - Season 5
-      </Text>
-      {!context.signerAddress && (
-        <Text color="white" textAlign="center">
-          Connect your wallet to stake & commit to our cohort!
-        </Text>
-      )}
+      <CohortHeader />
+      {!context.signerAddress && <PreStake />}
 
       {context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS && (
         <>
