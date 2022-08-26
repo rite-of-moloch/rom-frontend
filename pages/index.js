@@ -7,7 +7,7 @@ import {
   Box,
   Button,
   Spinner,
-  Image as ChakraImage,
+  Image,
   Link as ChakraLink,
   HStack,
   useToast,
@@ -254,13 +254,19 @@ export default function Home() {
       fontFamily="spaceMono"
       px="2rem"
     >
+      <Image
+        src="assets/full-h1-graphic.svg"
+        alt="SLAY OR BE SLAIN..."
+        boxSize="40%"
+      />
+
       <Text
         w="100%"
         bg="purple"
         p="15px"
         fontFamily="rubik"
         fontSize={{ lg: "1.2rem", sm: "1rem" }}
-        mb="2rem"
+        my="2rem"
         textAlign="center"
       >
         Cohort - Season 5
@@ -290,7 +296,7 @@ export default function Home() {
         </Text>
       </Link>
       {!context.signerAddress && (
-        <Text color="white" textAlign="center">
+        <Text color="white" textAlign="center" mb="6rem">
           Deploy your own Cohort to begin slaying Moloch for your DAO today!
         </Text>
       )}
