@@ -1,34 +1,14 @@
-import { useContext, useState, useEffect, useCallback } from 'react';
-import { providers } from 'ethers';
-import Web3 from 'web3';
-import Web3Modal from 'web3modal';
-import WalletConnectProvider from '@walletconnect/web3-provider';
+import { useContext, useState, useEffect, useCallback } from "react";
+import { providers } from "ethers";
+import Web3 from "web3";
+import Web3Modal from "web3modal";
 
-import { AppContext } from '../context/AppContext';
+import { AppContext } from "../context/AppContext";
 
-import { SIGNATURE_MESSAGE } from '../utils/constants';
-import { rpcUrls } from '../config';
-
-const providerOptions = {
-  walletconnect: {
-    package: WalletConnectProvider,
-    options: {
-      rpc: {
-        4: rpcUrls[4],
-        100: rpcUrls[100]
-      }
-    }
-  }
-};
-
-const WEB3_MODAL_OPTIONS = {
-  cacheProvider: true,
-  providerOptions,
-  theme: 'dark'
-};
+import { WEB3_MODAL_OPTIONS } from "../config";
 
 const web3Modal =
-  typeof window !== 'undefined' ? new Web3Modal(WEB3_MODAL_OPTIONS) : null;
+  typeof window !== "undefined" ? new Web3Modal(WEB3_MODAL_OPTIONS) : null;
 
 export const useWallet = () => {
   const context = useContext(AppContext);
@@ -71,11 +51,11 @@ export const useWallet = () => {
       await setWeb3Provider(modalProvider);
       setSignaturePending(false);
 
-      modalProvider.on('accountsChanged', async () => {
+      modalProvider.on("accountsChanged", async () => {
         window.location.reload();
       });
 
-      modalProvider.on('chainChanged', (_chainId) => {
+      modalProvider.on("chainChanged", (_chainId) => {
         const chainId = Number(_chainId);
         const ethersProvider = new providers.Web3Provider(modalProvider);
         context.setWeb3Data({
