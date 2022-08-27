@@ -11,6 +11,7 @@ import {
   Input,
   NumberInput,
   Button,
+  ExternalLinkIcon,
 } from "@chakra-ui/react";
 import { React, useState, useEffect, useContext } from "react";
 import { AppContext } from "../context/AppContext";
@@ -31,9 +32,12 @@ export default function deployCohort() {
   const context = useContext(AppContext);
   const [userSignedIn, setUserSignedIn] = useState(false);
 
+  const [txHash, setTxHash] = useState();
+
   const createCohort = async (data) => {
     const provider = context.ethersProvider;
-    const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochFactoryAddress;
+    const address =
+      CONTRACT_ADDRESSES[context.chainId].riteOfMolochFactoryAddress;
     const ABI_INTERFACE = [
       "function createCohort(tuple(address membershipCriteria, address stakingAsset, address treasury, uint256 threshold, uint256 assetAmount, uint256 duration, string name, string symbol, string baseUri), uint implementationSelector) external returns (address)",
     ];
@@ -45,10 +49,23 @@ export default function deployCohort() {
       await tx.wait();
       if (tx) {
         console.log(tx);
+        setTxHash(tx);
       }
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const clearForm = () => {
+    setMembershipCriteria("");
+    setDuration("");
+    setStakingAsset("");
+    setName("");
+    setTreasury("");
+    setTokenName("");
+    setThreshold("");
+    setAssetAmount("");
+    setBaseUri("");
   };
 
   const handleDeployCohort = async (e) => {
@@ -65,6 +82,8 @@ export default function deployCohort() {
       baseUri,
     ];
     createCohort(data);
+    setTxHash();
+    txHash ? clearForm() : null;
   };
 
   useEffect(() => {
@@ -316,6 +335,7 @@ export default function deployCohort() {
           DEPLOY
         </Button>
       </FormControl>
+
       <Flex
         color="white"
         mb="4rem"
