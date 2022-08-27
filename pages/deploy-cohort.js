@@ -12,52 +12,76 @@ import {
   NumberInput,
   Button,
 } from "@chakra-ui/react";
-import { useState, useEffect, useContext } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import { AppContext } from "../context/AppContext";
-import { ethers } from "ethers";
+import { ethers, Contract, utils } from "ethers";
 import { CONTRACT_ADDRESSES } from "../utils/constants";
 
-const contractAddress = CONTRACT_ADDRESSES[100].riteOfMolochAddress;
-console.log(AppContext.provider);
-
 export default function deployCohort() {
-  const [daoAddress, setDaoAddress] = useState("");
+  const [membershipCriteria, setMembershipCriteria] = useState("");
   const [duration, setDuration] = useState("");
   const [stakingAsset, setStakingAsset] = useState("");
   const [name, setName] = useState("");
   const [treasury, setTreasury] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [threshold, setThreshold] = useState("");
-  const [minimumStaked, setMinimumStaked] = useState("");
+  const [assetAmount, setAssetAmount] = useState("");
   const [baseUri, setBaseUri] = useState("");
 
-  const deployCohort = async (data) => {
-    const provider = AppContext.provider;
-    const abi = null;
-    const contractInstance = new ethers.Contract(
-      contractAddress,
-      abi,
-      provider
-    );
-    const deploy = contractInstance.deployCohort(data);
-  };
+  const context = useContext(AppContext);
+  const [userSignedIn, setUserSignedIn] = useState(false);
 
-  const handleDeployCohort = (e) => {
+  // const deployCohortEthers = async (data) => {
+  //   const contractAddress = CONTRACT_ADDRESSES[100].riteOfMolochAddress;
+  //   const provider = new ethers.providers.getDefaultProvider();
+  //   const signer = provider.getSigner();
+  //   const abi = [
+  //     "function createCohort(initData, implementationSelector) external returns (address)",
+  //   ];
+  //   const contract = await new Contract(contractAddress, abi, signer).connect(
+  //     signer
+  //   );
+
+  //   const createCohort = await contract.createCohort(data, 1);
+  //   await createCohort.wait();
+  // };
+
+  console.log(context);
+
+  const handleDeployCohort = async (e) => {
     e.preventDefault();
-    console.log("deploy");
-    const membershipCriteria = {
-      daoAddress,
-      duration,
+    const data = {
+      membershipCriteria,
       stakingAsset,
-      name,
       treasury,
-      tokenName,
       threshold,
-      minimumStaked,
+      assetAmount,
+      duration,
+      name,
+      tokenName,
       baseUri,
     };
-    deployCohort(membershipCriteria);
+    const provider = context.ethersProvider;
+    const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
+    const signer = provider.provider;
+    try {
+      const tx = await createCohort(
+        context.ethersProvider,
+        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
+        cohortAddress ? cohortAddress : context.signerAddress
+      );
+      if (tx) {
+        console.log(tx);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  useEffect(() => {
+    if (context.signerAddress) setUserSignedIn(() => true);
+    else if (context.signerAddress === null) setUserSignedIn(() => false);
+  }, [context.signerAddress]);
 
   return (
     <Flex
@@ -79,7 +103,7 @@ export default function deployCohort() {
       >
         Deploy Your Own Cohort
       </Text>
-      <FormControl>
+      <FormControl display={!!userSignedIn ? "" : "none"}>
         <Flex alignItems="center" justifyContent="center">
           <SimpleGrid
             columns={2}
@@ -93,10 +117,10 @@ export default function deployCohort() {
                 The contract address used to ascertain cohort completion
               </FormLabel>
               <Input
-                value={daoAddress}
-                onChange={(e) => setDaoAddress(e.target.value)}
+                value={membershipCriteria}
+                onChange={(e) => setMembershipCriteria(e.target.value)}
                 type="text"
-                id="daoAddress"
+                id="membershipCriteria"
                 isRequired={true}
                 placeholder="Input daoAddress"
                 _placeholder={{ color: "white", fontSize: "sm" }}
@@ -245,9 +269,9 @@ export default function deployCohort() {
               </FormLabel>
               <Input
                 type="number"
-                value={minimumStaked}
-                id="minimumStaked"
-                onChange={(e) => setMinimumStaked(e.target.value)}
+                value={assetAmount}
+                id="assetAmount"
+                onChange={(e) => setAssetAmount(e.target.value)}
                 placeholder="Input the minimum staked asset to join"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -295,13 +319,28 @@ export default function deployCohort() {
           width="50%"
           p="1.75rem"
           m="auto"
-          mb="6rem"
+          mb="4rem"
           alignItems="center"
           _hover={{ cursor: "pointer" }}
         >
           DEPLOY
         </Button>
       </FormControl>
+      <Flex
+        color="white"
+        mb="4rem"
+        mx="auto"
+        p="0.5rem"
+        textDecoration="underline"
+        textUnderlineOffset="4px"
+        _hover={{ cursor: "pointer" }}
+      >
+        <Link href="/">
+          <Text>
+            Click here instead to stake & commit to our cohort at Raid Guild!
+          </Text>
+        </Link>
+      </Flex>
     </Flex>
   );
 }

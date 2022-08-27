@@ -277,24 +277,26 @@ export default function Home() {
         </Text>
       )}
 
-      <Link href="/deploy-cohort">
-        <Text
-          w="50%"
-          bg="red"
-          p="15px"
-          fontFamily="rubik"
-          fontSize={{ lg: "1.2rem", sm: "1rem" }}
-          mt="6rem"
-          mb="2rem"
-          textAlign="center"
-          rounded="md"
-          _hover={{
-            cursor: "pointer",
-          }}
-        >
-          Deploy Your Own Cohort{" "}
-        </Text>
-      </Link>
+      {!context.signerAddress && (
+        <Link href="/deploy-cohort">
+          <Text
+            w="50%"
+            bg="red"
+            p="15px"
+            fontFamily="rubik"
+            fontSize={{ lg: "1.2rem", sm: "1rem" }}
+            mt="6rem"
+            mb="2rem"
+            textAlign="center"
+            rounded="md"
+            _hover={{
+              cursor: "pointer",
+            }}
+          >
+            Deploy Your Own Cohort{" "}
+          </Text>
+        </Link>
+      )}
       {!context.signerAddress && (
         <Text color="white" textAlign="center" mb="6rem">
           Deploy your own Cohort to begin slaying Moloch for your DAO today!
@@ -441,6 +443,19 @@ export default function Home() {
                   >
                     Stake
                   </StyledButton>
+                </Flex>
+                <Flex
+                  color="white"
+                  mt="2rem"
+                  mx="auto"
+                  p="0.5rem"
+                  textDecoration="underline"
+                  textUnderlineOffset="4px"
+                  _hover={{ cursor: "pointer" }}
+                >
+                  <Link href="/deploy-cohort">
+                    <Text>Click Here To Deploy Your Own Cohort</Text>
+                  </Link>
                 </Flex>
               </Flex>
             ))}
