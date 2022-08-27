@@ -271,7 +271,7 @@ export default function Home() {
 
       {isLoading && <Spinner color="red" size="xl" />}
 
-      <Box opacity={!show || isLoading ? 0 : 1} transition="opacity 0.25s">
+      <Flex opacity={!show || isLoading ? 0 : 1} transition="opacity 0.25s" w="100%">
         {!isLoading &&
           (riteBalance > 0 ? (
             <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
