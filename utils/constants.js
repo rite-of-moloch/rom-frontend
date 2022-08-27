@@ -13,7 +13,8 @@ export const CONTRACT_ADDRESSES = {
   },
   100: {
     erc20TokenAddress: '0x18e9262e68cc6c6004db93105cc7c001bb103e49',
-    riteOfMolochAddress: '0x67f22aa92dc5bc8840073f0b9251af679a99ab57'
+    riteOfMolochAddress: '0x67f22aa92dc5bc8840073f0b9251af679a99ab57',
+    riteOfMolochFactoryAddress: '0xBb7353efB505D63408D1C762A5C3A1636E9Ca003'
   }
 };
 

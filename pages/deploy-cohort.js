@@ -58,7 +58,7 @@ export default function deployCohort() {
       stakingAsset,
       treasury,
       threshold,
-      assetAmount,
+      utils.parseEther(assetAmount),
       duration,
       name,
       tokenName,
