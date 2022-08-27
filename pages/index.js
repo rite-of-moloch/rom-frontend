@@ -48,6 +48,11 @@ export default function Home() {
 
   const initialFetch = async () => {
     setIsLoading(true);
+    await fetchRiteBalance();
+    setIsLoading(false);
+  };
+
+  const fetchRiteBalance = async () => {
     const _riteBalance = await getTokenBalance(
       context.ethersProvider,
       context.signerAddress,
@@ -62,7 +67,6 @@ export default function Home() {
       await fetchAllowance();
       await fetchRaidBalance();
     }
-    setIsLoading(false);
   };
 
   const fetchStakeDeadline = async () => {
