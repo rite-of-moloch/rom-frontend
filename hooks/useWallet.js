@@ -1,31 +1,20 @@
-import { useContext, useState } from 'react';
-import { providers } from 'ethers';
-import Web3 from 'web3';
-import Web3Modal from 'web3modal';
-import WalletConnectProvider from '@walletconnect/web3-provider';
+import { useContext, useState, useEffect, useCallback } from "react";
+import { providers } from "ethers";
+import Web3 from "web3";
+import Web3Modal from "web3modal";
 
-import { AppContext } from '../context/AppContext';
+import { AppContext } from "../context/AppContext";
 
-import { SIGNATURE_MESSAGE } from '../utils/constants';
-import { rpcUrls } from '../config';
+import { WEB3_MODAL_OPTIONS } from "../config";
 
-const providerOptions = {
-  walletconnect: {
-    package: WalletConnectProvider,
-    options: {
-      rpc: {
-        4: rpcUrls[4],
-        100: rpcUrls[100]
-      }
-    }
-  }
-};
+const web3Modal =
+  typeof window !== "undefined" ? new Web3Modal(WEB3_MODAL_OPTIONS) : null;
 
 export const useWallet = () => {
   const context = useContext(AppContext);
   const [signaturePending, setSignaturePending] = useState(false);
 
-  const setWeb3Provider = async (modalProvider) => {
+  const setWeb3Provider = useCallback(async (modalProvider) => {
     const ethersProvider = new providers.Web3Provider(modalProvider);
     const web3 = new Web3(modalProvider);
     const signerAddress = (
@@ -33,39 +22,40 @@ export const useWallet = () => {
     ).toLowerCase();
     const chainId = Number(modalProvider.chainId);
 
-    await ethersProvider.getSigner().signMessage(SIGNATURE_MESSAGE);
-
     context.setWeb3Data({
       ethersProvider,
       web3,
       signerAddress,
       chainId
     });
-  };
+  }, []);
 
-  let web3Modal;
+  const disconnect = useCallback(async () => {
+    web3Modal?.clearCachedProvider();
+    context.setWeb3Data({
+      ethersProvider: null,
+      web3: null,
+      signerAddress: null,
+      signerEns: null,
+      chainId: null
+    });
+  }, []);
 
-  const connectWallet = async () => {
+  const connectWallet = useCallback(async () => {
+    if (!web3Modal) return;
+
     try {
       setSignaturePending(true);
 
-      web3Modal = new Web3Modal({
-        network: 'mainnet',
-        cacheProvider: true,
-        providerOptions
-      });
-
-      web3Modal.clearCachedProvider();
       const modalProvider = await web3Modal.connect();
-
       await setWeb3Provider(modalProvider);
       setSignaturePending(false);
 
-      modalProvider.on('accountsChanged', async () => {
+      modalProvider.on("accountsChanged", async () => {
         window.location.reload();
       });
 
-      modalProvider.on('chainChanged', (_chainId) => {
+      modalProvider.on("chainChanged", (_chainId) => {
         const chainId = Number(_chainId);
         const ethersProvider = new providers.Web3Provider(modalProvider);
         context.setWeb3Data({
@@ -75,19 +65,14 @@ export const useWallet = () => {
       });
     } catch (err) {
       setSignaturePending(false);
-      console.log(err);
     }
-  };
+  }, [setWeb3Provider, disconnect]);
 
-  const disconnect = async () => {
-    context.setWeb3Data({
-      ethersProvider: null,
-      web3: null,
-      signerAddress: null,
-      signerEns: null,
-      chainId: null
-    });
-  };
+  useEffect(() => {
+    if (web3Modal?.cachedProvider) {
+      connectWallet();
+    }
+  }, []);
 
   return { signaturePending, connectWallet, disconnect };
 };

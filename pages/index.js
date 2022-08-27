@@ -6,7 +6,7 @@ import {
   Box,
   Spinner,
   Link as ChakraLink,
-  useToast,
+  useToast
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
 import { ethers, utils } from "ethers";
@@ -17,7 +17,7 @@ import {
   getStakeDeadline,
   getAllowance,
   approveRaid,
-  joinInitiation,
+  joinInitiation
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
@@ -130,7 +130,7 @@ export default function Home() {
             transaction
           </ChakraLink>
         </Box>
-      ),
+      )
     });
   };
 
@@ -161,9 +161,9 @@ export default function Home() {
             position: "bottom-left",
             render: () => (
               <Box color="white" p={3} bg="red.500">
-                'Transaction failed.'
+                Transaction failed.
               </Box>
-            ),
+            )
           });
         }
       }
@@ -174,7 +174,7 @@ export default function Home() {
           <Box color="white" p={3} bg="red.500">
             {err.message}
           </Box>
-        ),
+        )
       });
     }
     setIsApproveTxPending(false);
@@ -191,7 +191,7 @@ export default function Home() {
             <Box color="white" p={3} bg="red.500">
               Wrong sponsor's address
             </Box>
-          ),
+          )
         });
         return;
       }
@@ -217,7 +217,7 @@ export default function Home() {
               <Box color="white" p={3} bg="red.500">
                 Transaction failed.
               </Box>
-            ),
+            )
           });
         }
       }
@@ -228,7 +228,7 @@ export default function Home() {
           <Box color="white" p={3} bg="red.500">
             {err.message}
           </Box>
-        ),
+        )
       });
     }
     setIsStakeTxPending(false);
@@ -254,6 +254,9 @@ export default function Home() {
     ? "Allowance is smaller than the minimum stake amount."
     : "Your RAID balance is too low";
 
+  const show =
+    context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;
+
   return (
     <Flex
       minH="350px"
@@ -266,32 +269,31 @@ export default function Home() {
       <CohortHeader />
       {!context.signerAddress && <PreStake />}
 
-      {context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS && (
-        <>
-          {isLoading && <Spinner color="red" size="xl" />}
-          {!isLoading &&
-            (riteBalance > 0 ? (
-              <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
-            ) : (
-              <StakingFlow
-                minimumStake={minimumStake}
-                context={context}
-                raidBalance={raidBalance}
-                allowance={allowance}
-                isChecked={isChecked}
-                handleIsChecked={handleIsChecked}
-                cohortAddress={cohortAddress}
-                handleCohortAddress={handleCohortAddress}
-                isApproveTxPending={isApproveTxPending}
-                makeAnAllowance={makeAnAllowance}
-                canStake={canStake}
-                canNotStakeTooltipLabel={canNotStakeTooltipLabel}
-                isStakeTxPending={isStakeTxPending}
-                depositStake={depositStake}
-              />
-            ))}
-        </>
-      )}
+      {isLoading && <Spinner color="red" size="xl" />}
+
+      <Flex opacity={!show || isLoading ? 0 : 1} transition="opacity 0.25s" w="100%">
+        {!isLoading &&
+          (riteBalance > 0 ? (
+            <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
+          ) : (
+            <StakingFlow
+              minimumStake={minimumStake}
+              context={context}
+              raidBalance={raidBalance}
+              allowance={allowance}
+              isChecked={isChecked}
+              handleIsChecked={handleIsChecked}
+              cohortAddress={cohortAddress}
+              handleCohortAddress={handleCohortAddress}
+              isApproveTxPending={isApproveTxPending}
+              makeAnAllowance={makeAnAllowance}
+              canStake={canStake}
+              canNotStakeTooltipLabel={canNotStakeTooltipLabel}
+              isStakeTxPending={isStakeTxPending}
+              depositStake={depositStake}
+            />
+          ))}
+      </Flex>
 
       {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
         <NetworkError />
