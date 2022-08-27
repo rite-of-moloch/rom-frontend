@@ -195,7 +195,7 @@ export default function Home() {
       const tx = await joinInitiation(
         context.ethersProvider,
         contractAddress().riteOfMolochAddress,
-        (cohortAddress != '' && isChecked) ? cohortAddress : context.signerAddress
+        (cohortAddress != "" && isChecked) ? cohortAddress : context.signerAddress
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -240,8 +240,8 @@ export default function Home() {
   const formatedRaidBalance = () => utils.formatUnits(raidBalance, "ether");
 
   const canStake =
-  formatedAllowance() > formatedMinumumStake() &&
-  formatedRaidBalance() > formatedMinumumStake() &&
+  formatedAllowance() >= formatedMinumumStake() &&
+  formatedRaidBalance() >= formatedMinumumStake() &&
     !ethers.utils.isAddress(cohortAddress);
 
   const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
@@ -250,7 +250,7 @@ export default function Home() {
     ? "Allowance is smaller than the minimum stake amount."
     : "Your RAID balance is too low";
 
-    const show =
+  const show =
     context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;
 
   return (
@@ -264,6 +264,8 @@ export default function Home() {
     >
       <CohortHeader />
       {!context.signerAddress && <PreStake />}
+
+      {isLoading && <Spinner color="red" size="xl" />}
 
       <Flex opacity={!show || isLoading ? 0 : 1} transition="opacity 0.25s" w="100%">
         {!isLoading &&
