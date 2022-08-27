@@ -35,7 +35,7 @@ export default function deployCohort() {
     const provider = context.ethersProvider;
     const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
     const ABI_INTERFACE = [
-      "function createCohort(initData, implementationSelector) external returns (address)",
+      "function createCohort(tuple(address membershipCriteria, address stakingAsset, address treasury, uint256 threshold, uint256 assetAmount, uint256 duration, string name, string symbol, string baseUri), uint implementationSelector) external returns (address)",
     ];
     const signer = provider.getSigner();
     const contract = new Contract(address, ABI_INTERFACE, signer);
@@ -53,7 +53,7 @@ export default function deployCohort() {
 
   const handleDeployCohort = async (e) => {
     e.preventDefault();
-    const data = {
+    const data = [
       membershipCriteria,
       stakingAsset,
       treasury,
@@ -63,7 +63,8 @@ export default function deployCohort() {
       name,
       tokenName,
       baseUri,
-    };
+    ];
+    console.log('Data', data);
     createCohort(data);
   };
 
