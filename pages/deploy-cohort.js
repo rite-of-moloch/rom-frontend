@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { React, useState, useEffect, useContext } from "react";
 import { AppContext } from "../context/AppContext";
-import { ethers, Contract, utils } from "ethers";
+import { ethers, Contract, utils, BigNumber } from "ethers";
 import { CONTRACT_ADDRESSES } from "../utils/constants";
 
 export default function deployCohort() {
@@ -33,7 +33,7 @@ export default function deployCohort() {
 
   const createCohort = async (data) => {
     const provider = context.ethersProvider;
-    const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
+    const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochFactoryAddress;
     const ABI_INTERFACE = [
       "function createCohort(tuple(address membershipCriteria, address stakingAsset, address treasury, uint256 threshold, uint256 assetAmount, uint256 duration, string name, string symbol, string baseUri), uint implementationSelector) external returns (address)",
     ];
@@ -64,7 +64,6 @@ export default function deployCohort() {
       tokenName,
       baseUri,
     ];
-    console.log('Data', data);
     createCohort(data);
   };
 
@@ -175,7 +174,7 @@ export default function deployCohort() {
               <Input
                 value={name}
                 id="name"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value.toUpperCase())}
                 placeholder="Input name for SBT"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -217,7 +216,7 @@ export default function deployCohort() {
               <Input
                 value={tokenName}
                 id="tokenName"
-                onChange={(e) => setTokenName(e.target.value)}
+                onChange={(e) => setTokenName(e.target.value.toUpperCase())}
                 placeholder="Input token name"
                 _placeholder={{ color: "white", fontSize: "sm" }}
                 isRequired={true}
@@ -299,6 +298,7 @@ export default function deployCohort() {
             </Box>
           </SimpleGrid>
         </Flex>
+
         <Button
           onClick={handleDeployCohort}
           display="flex"
