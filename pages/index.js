@@ -293,7 +293,7 @@ export default function Home() {
               depositStake={depositStake}
             />
           ))}
-      </Box>
+      </Flex>
 
       {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
         <NetworkError />
