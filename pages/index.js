@@ -134,6 +134,14 @@ export default function Home() {
     });
   };
 
+  const handleIsChecked = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const handleCohortAddress = (e) => {
+    setCohortAddress(e.target.value);
+  };
+
   const makeAnAllowance = async () => {
     setIsApproveTxPending(true);
     try {
