@@ -31,22 +31,25 @@ export default function deployCohort() {
   const context = useContext(AppContext);
   const [userSignedIn, setUserSignedIn] = useState(false);
 
-  // const deployCohortEthers = async (data) => {
-  //   const contractAddress = CONTRACT_ADDRESSES[100].riteOfMolochAddress;
-  //   const provider = new ethers.providers.getDefaultProvider();
-  //   const signer = provider.getSigner();
-  //   const abi = [
-  //     "function createCohort(initData, implementationSelector) external returns (address)",
-  //   ];
-  //   const contract = await new Contract(contractAddress, abi, signer).connect(
-  //     signer
-  //   );
+  const createCohort = async (data) => {
+    const provider = context.ethersProvider;
+    const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
+    const ABI_INTERFACE = [
+      "function createCohort(initData, implementationSelector) external returns (address)",
+    ];
+    const signer = provider.getSigner();
+    const contract = new Contract(address, ABI_INTERFACE, signer);
 
-  //   const createCohort = await contract.createCohort(data, 1);
-  //   await createCohort.wait();
-  // };
-
-  console.log(context);
+    try {
+      const tx = await contract.createCohort(data, 1);
+      await tx.wait();
+      if (tx) {
+        console.log(tx);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleDeployCohort = async (e) => {
     e.preventDefault();
@@ -61,21 +64,7 @@ export default function deployCohort() {
       tokenName,
       baseUri,
     };
-    const provider = context.ethersProvider;
-    const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
-    const signer = provider.provider;
-    try {
-      const tx = await createCohort(
-        context.ethersProvider,
-        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        cohortAddress ? cohortAddress : context.signerAddress
-      );
-      if (tx) {
-        console.log(tx);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    createCohort(data);
   };
 
   useEffect(() => {

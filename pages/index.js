@@ -258,6 +258,7 @@ export default function Home() {
         src="assets/full-h1-graphic.svg"
         alt="SLAY OR BE SLAIN..."
         boxSize="40%"
+        opacity="0.6"
       />
 
       <Text
