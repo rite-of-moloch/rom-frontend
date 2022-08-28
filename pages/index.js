@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Link from "next/link";
+import React from "react";
 import {
   Flex,
-  Heading,
-  Text,
   Box,
-  Button,
   Spinner,
   Image,
   Link as ChakraLink,
@@ -15,7 +13,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
-import { utils } from "ethers";
+import { ethers, utils } from "ethers";
 import styled from "@emotion/styled";
 
 import {
@@ -24,13 +22,17 @@ import {
   getStakeDeadline,
   getAllowance,
   approveRaid,
-  joinInitiation,
+  joinInitiation
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
-import { CONTRACT_ADDRESSES, TOKEN_TICKER } from "../utils/constants";
+import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 import { SUPPORTED_NETWORK_IDS } from "../config";
-import { CountdownTimer } from "../shared/CountdownTimer";
+import { NetworkError } from "../shared/NetworkError";
+import { RiteStaked } from "../shared/RiteStaked";
+import { StakingFlow } from "../shared/StakingFlow";
+import { CohortHeader } from "../shared/CohortHeader";
+import { PreStake } from "../shared/PreStake";
 
 const StyledButton = styled(Button)`
   height: 50px;
@@ -57,11 +59,11 @@ export default function Home() {
   const [allowance, setAllowance] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isAppoveTxPending, setIsApproveTxPending] = useState(false);
+  const [isApproveTxPending, setIsApproveTxPending] = useState(false);
   const [isStakeTxPending, setIsStakeTxPending] = useState(false);
 
   const [isChecked, setIsChecked] = useState(false);
-  const [cohortAddress, setCohortAddress] = useState(null);
+  const [cohortAddress, setCohortAddress] = useState("");
 
   const initialFetch = async () => {
     setIsLoading(true);
@@ -152,15 +154,10 @@ export default function Home() {
   };
 
   const handleIsChecked = () => {
-    setIsChecked((wasChecked) => {
-      if (wasChecked) {
-        setCohortAddress(null);
-      }
-      return !wasChecked;
-    });
+    setIsChecked(!isChecked);
   };
 
-  const handlCohortAddress = (e) => {
+  const handleCohortAddress = (e) => {
     setCohortAddress(e.target.value);
   };
 
@@ -183,7 +180,7 @@ export default function Home() {
             position: "bottom-left",
             render: () => (
               <Box color="white" p={3} bg="red.500">
-                'Transaction failed.'
+                Transaction failed.
               </Box>
             ),
           });
@@ -194,7 +191,7 @@ export default function Home() {
         position: "bottom-left",
         render: () => (
           <Box color="white" p={3} bg="red.500">
-            {err}
+            {err.message}
           </Box>
         ),
       });
@@ -203,12 +200,29 @@ export default function Home() {
   };
 
   const depositStake = async () => {
+    //Check if cohortAddress is an actual address
+    if (cohortAddress != "" && isChecked) {
+      if (!utils.isAddress(cohortAddress)) {
+        toast({
+          position: "bottom-left",
+          duration: 5000,
+          render: () => (
+            <Box color="white" p={3} bg="red.500">
+              Wrong sponsor's address
+            </Box>
+          )
+        });
+        return;
+      }
+    }
+
+    //Start stake process
     setIsStakeTxPending(true);
     try {
       const tx = await joinInitiation(
         context.ethersProvider,
         CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        cohortAddress ? cohortAddress : context.signerAddress
+        cohortAddress != "" && isChecked ? cohortAddress : context.signerAddress
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -220,7 +234,7 @@ export default function Home() {
             position: "bottom-left",
             render: () => (
               <Box color="white" p={3} bg="red.500">
-                'Transaction failed.'
+                Transaction failed.
               </Box>
             ),
           });
@@ -231,7 +245,7 @@ export default function Home() {
         position: "bottom-left",
         render: () => (
           <Box color="white" p={3} bg="red.500">
-            {err}
+            {err.message}
           </Box>
         ),
       });
@@ -245,6 +259,23 @@ export default function Home() {
     }
   }, [context.chainId]);
 
+  const canStake =
+    utils.formatUnits(allowance, "ether") >=
+      utils.formatUnits(minimumStake, "ether") &&
+    utils.formatUnits(raidBalance, "ether") >=
+      utils.formatUnits(minimumStake, "ether") &&
+    !ethers.utils.isAddress(cohortAddress);
+
+  const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
+    ? "Please input a valid wallet address"
+    : utils.formatUnits(allowance, "ether") <
+      utils.formatUnits(minimumStake, "ether")
+    ? "Allowance is smaller than the minimum stake amount."
+    : "Your RAID balance is too low";
+
+  const show =
+    context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;
+
   return (
     <Flex
       minH="350px"
@@ -254,6 +285,37 @@ export default function Home() {
       fontFamily="spaceMono"
       px="2rem"
     >
+          <CohortHeader />
+      {!context.signerAddress && <PreStake />}
+
+      {isLoading && <Spinner color="red" size="xl" />}
+
+      <Flex opacity={!show || isLoading ? 0 : 1} transition="opacity 0.25s" w="100%">
+        {!isLoading &&
+          (riteBalance > 0 ? (
+            <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
+          ) : (
+            <StakingFlow
+              minimumStake={minimumStake}
+              context={context}
+              raidBalance={raidBalance}
+              allowance={allowance}
+              isChecked={isChecked}
+              handleIsChecked={handleIsChecked}
+              cohortAddress={cohortAddress}
+              handleCohortAddress={handleCohortAddress}
+              isApproveTxPending={isApproveTxPending}
+              makeAnAllowance={makeAnAllowance}
+              canStake={canStake}
+              canNotStakeTooltipLabel={canNotStakeTooltipLabel}
+              isStakeTxPending={isStakeTxPending}
+              depositStake={depositStake}
+            />
+          ))}
+      </Flex>
+
+      {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
+        <NetworkError />
       <Image
         src="assets/full-h1-graphic.svg"
         alt="SLAY OR BE SLAIN..."
