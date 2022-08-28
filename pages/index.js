@@ -279,6 +279,10 @@ export default function Home() {
 
       {!context.signerAddress && <DeployCohortButton />}
 
+      {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
+        <NetworkError />
+      )}
+
       {isLoading && <Spinner color="red" size="xl" />}
 
       <Flex
