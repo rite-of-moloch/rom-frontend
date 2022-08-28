@@ -22,7 +22,7 @@ import {
   getStakeDeadline,
   getAllowance,
   approveRaid,
-  joinInitiation
+  joinInitiation,
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
@@ -33,20 +33,8 @@ import { RiteStaked } from "../shared/RiteStaked";
 import { StakingFlow } from "../shared/StakingFlow";
 import { CohortHeader } from "../shared/CohortHeader";
 import { PreStake } from "../shared/PreStake";
-
-const StyledButton = styled(Button)`
-  height: 50px;
-  width: 100%;
-  border-radius: "2px";
-  padding-left: "24px";
-  padding-right: "24px";
-`;
-
-const StyledHStack = styled(HStack)`
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-`;
+import { HeaderOne } from "../shared/Header0ne";
+import { DeployCohortButton } from "../shared/DeployCohortButton";
 
 export default function Home() {
   const context = useContext(AppContext);
@@ -210,7 +198,7 @@ export default function Home() {
             <Box color="white" p={3} bg="red.500">
               Wrong sponsor's address
             </Box>
-          )
+          ),
         });
         return;
       }
@@ -285,12 +273,19 @@ export default function Home() {
       fontFamily="spaceMono"
       px="2rem"
     >
-          <CohortHeader />
+      <HeaderOne />
+      <CohortHeader />
       {!context.signerAddress && <PreStake />}
+
+      {!context.signerAddress && <DeployCohortButton />}
 
       {isLoading && <Spinner color="red" size="xl" />}
 
-      <Flex opacity={!show || isLoading ? 0 : 1} transition="opacity 0.25s" w="100%">
+      <Flex
+        opacity={!show || isLoading ? 0 : 1}
+        transition="opacity 0.25s"
+        w="100%"
+      >
         {!isLoading &&
           (riteBalance > 0 ? (
             <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
@@ -313,228 +308,6 @@ export default function Home() {
             />
           ))}
       </Flex>
-
-      {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
-        <NetworkError />
-      <Image
-        src="assets/full-h1-graphic.svg"
-        alt="SLAY OR BE SLAIN..."
-        boxSize="40%"
-        opacity="0.6"
-      />
-
-      <Text
-        w="100%"
-        bg="purple"
-        p="15px"
-        fontFamily="rubik"
-        fontSize={{ lg: "1.2rem", sm: "1rem" }}
-        my="2rem"
-        textAlign="center"
-      >
-        Cohort - Season 5
-      </Text>
-      {!context.signerAddress && (
-        <Text color="white" textAlign="center">
-          Connect your wallet to stake & commit to our cohort!
-        </Text>
-      )}
-
-      {!context.signerAddress && (
-        <Link href="/deploy-cohort">
-          <Text
-            w="50%"
-            bg="red"
-            p="15px"
-            fontFamily="rubik"
-            fontSize={{ lg: "1.2rem", sm: "1rem" }}
-            mt="6rem"
-            mb="2rem"
-            textAlign="center"
-            rounded="md"
-            _hover={{
-              cursor: "pointer",
-            }}
-          >
-            Deploy Your Own Cohort{" "}
-          </Text>
-        </Link>
-      )}
-      {!context.signerAddress && (
-        <Text color="white" textAlign="center" mb="6rem">
-          Deploy your own Cohort to begin slaying Moloch for your DAO today!
-        </Text>
-      )}
-
-      {context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS && (
-        <>
-          {isLoading && <Spinner color="red" size="xl" />}
-          {!isLoading &&
-            (riteBalance > 0 ? (
-              <Flex
-                w="100%"
-                direction="column"
-                alignItems="center"
-                justifyContent="space-between"
-                p="15px"
-              >
-                <ChakraImage
-                  src="/assets/token_img.jpg"
-                  w="150px"
-                  borderRadius="20px"
-                  mb="2rem"
-                  alt="Rite Token"
-                />
-
-                <Text
-                  color="red"
-                  fontSize={{ lg: "1.2rem", sm: "1rem" }}
-                  mb="5px"
-                >
-                  You own a stake for {Number(riteBalance)} RITE
-                </Text>
-                <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
-                  Deadline - {new Date(stakeDeadline * 1000).toLocaleString()}
-                </Text>
-                <CountdownTimer
-                  targetDate={new Date(stakeDeadline * 1000).getTime()}
-                />
-              </Flex>
-            ) : (
-              <Flex
-                w="100%"
-                direction="column"
-                alignItems="flex-start"
-                p="15px"
-              >
-                <StyledHStack mb="1rem">
-                  <Text color="red" fontSize={{ lg: "1.2rem", sm: ".8rem" }}>
-                    Required Stake
-                  </Text>
-                  <Text color="white" fontSize={{ lg: "1.2rem", sm: ".8rem" }}>
-                    {utils.formatUnits(minimumStake, "ether")}{" "}
-                    {TOKEN_TICKER[context.chainId]}
-                  </Text>
-                </StyledHStack>
-                <StyledHStack>
-                  <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-                    Your {TOKEN_TICKER[context.chainId]} balance
-                  </Text>
-                  <Text color="white" fontSize=".8rem">
-                    {utils.formatUnits(raidBalance, "ether")}{" "}
-                    {TOKEN_TICKER[context.chainId]}
-                  </Text>
-                </StyledHStack>
-                <StyledHStack>
-                  <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-                    Your {TOKEN_TICKER[context.chainId]} allowance
-                  </Text>
-                  <Text color="white" fontSize=".8rem">
-                    {utils.formatUnits(allowance, "ether")}{" "}
-                    {TOKEN_TICKER[context.chainId]}
-                  </Text>
-                </StyledHStack>
-                <Flex
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  mt="2em"
-                >
-                  <Checkbox
-                    defaultChecked
-                    isChecked={isChecked}
-                    onChange={handleIsChecked}
-                  />
-                  <Text
-                    color="red"
-                    fontFamily="jetbrains"
-                    fontSize=".8rem"
-                    ml="1em"
-                  >
-                    Sponsor a Cohort
-                  </Text>
-                </Flex>
-                <Input
-                  onChange={handlCohortAddress}
-                  placeholder="Input Cohort Wallet Address or ENS"
-                  _placeholder={{ color: "white", fontSize: "sm" }}
-                  display={isChecked ? "inline" : "none"}
-                  bg="#741739"
-                  color="white"
-                  rounded="none"
-                  border="0px"
-                  opacity="none"
-                  width={{ md: "50%", sm: "full" }}
-                  mt="1rem"
-                  fontSize="sm"
-                />
-                <Flex mt="2rem" w="100%">
-                  <StyledButton
-                    bg="transparent"
-                    border="2px solid"
-                    borderColor="red"
-                    color="red"
-                    mr="1rem"
-                    isLoading={isAppoveTxPending}
-                    loadingText="Approving..."
-                    disabled={
-                      utils.formatUnits(allowance, "ether") >=
-                      utils.formatUnits(minimumStake, "ether")
-                    }
-                    onClick={makeAnAllowance}
-                    _hover={{
-                      opacity: 0.8,
-                    }}
-                  >
-                    Approve
-                  </StyledButton>
-                  <StyledButton
-                    bg="red"
-                    color="black"
-                    isLoading={isStakeTxPending}
-                    loadingText="Staking..."
-                    disabled={
-                      utils.formatUnits(allowance, "ether") <
-                        utils.formatUnits(minimumStake, "ether") ||
-                      utils.formatUnits(raidBalance, "ether") <
-                        utils.formatUnits(minimumStake, "ether")
-                    }
-                    onClick={depositStake}
-                    _hover={{
-                      opacity: 0.8,
-                    }}
-                  >
-                    Stake
-                  </StyledButton>
-                </Flex>
-                <Flex
-                  color="white"
-                  mt="2rem"
-                  mx="auto"
-                  p="0.5rem"
-                  textDecoration="underline"
-                  textUnderlineOffset="4px"
-                  _hover={{ cursor: "pointer" }}
-                >
-                  <Link href="/deploy-cohort">
-                    <Text>Click Here To Deploy Your Own Cohort</Text>
-                  </Link>
-                </Flex>
-              </Flex>
-            ))}
-        </>
-      )}
-
-      {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
-        <Flex direction="column" alignItems="center">
-          <Box fontSize="40px" color="red">
-            <i className="fa-solid fa-circle-xmark"></i>
-          </Box>
-          <Text fontFamily="spaceMono" color="white" fontSize="1.2rem">
-            Unsupported network
-          </Text>
-        </Flex>
-      )}
     </Flex>
   );
 }
