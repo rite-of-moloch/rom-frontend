@@ -277,7 +277,7 @@ export default function Home() {
       <CohortHeader />
       {!context.signerAddress && <PreStake />}
 
-      {!context.signerAddress && <DeployCohortButton />}
+      <DeployCohortButton />
 
       {isLoading && <Spinner color="red" size="xl" />}
 
