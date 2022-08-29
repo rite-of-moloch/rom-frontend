@@ -277,7 +277,7 @@ export default function Home() {
       <CohortHeader />
       {!context.signerAddress && <PreStake />}
 
-      {!context.signerAddress && <DeployCohortButton />}
+      <DeployCohortButton />
 
       {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
         <NetworkError />
