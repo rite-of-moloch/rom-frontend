@@ -111,6 +111,11 @@ export default function deployCohort() {
       >
         Deploy Your Own Cohort
       </Text>
+      {!context.signerAddress ? (
+        <Text color="red" mt="2rem" mb="4rem" fontSize="lg">
+          Connect your wallet to get started, soldier...
+        </Text>
+      ) : null}
       <FormControl display={!!userSignedIn ? "" : "none"}>
         <Flex alignItems="center" justifyContent="center">
           <SimpleGrid
