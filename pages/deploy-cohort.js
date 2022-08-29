@@ -100,17 +100,19 @@ export default function deployCohort() {
       fontFamily="spaceMono"
       px="2rem"
     >
-      <Text
-        w={{ md: "90%", sm: "100%" }}
-        bg="purple"
-        p="15px"
-        fontFamily="rubik"
-        fontSize={{ lg: "1.2rem", sm: "1rem" }}
-        my="2rem"
-        textAlign="center"
-      >
-        Deploy Your Own Cohort
-      </Text>
+      {!context.signerAddress ? (
+        <Text
+          w={{ md: "90%", sm: "100%" }}
+          bg="purple"
+          p="15px"
+          fontFamily="rubik"
+          fontSize={{ lg: "1.2rem", sm: "1rem" }}
+          my="2rem"
+          textAlign="center"
+        >
+          Deploy Your Own Cohort
+        </Text>
+      ) : null}
       {!context.signerAddress ? (
         <Text color="red" mt="2rem" mb="4rem" fontSize="lg">
           Connect your wallet to get started, soldier...
@@ -351,9 +353,7 @@ export default function deployCohort() {
         _hover={{ cursor: "pointer" }}
       >
         <Link href="/">
-          <Text>
-            Click here instead to stake & commit to our cohort at Raid Guild!
-          </Text>
+          <Text>Click here to stake & commit to our cohort at Raid Guild!</Text>
         </Link>
       </Flex>
     </Flex>

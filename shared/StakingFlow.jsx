@@ -2,6 +2,8 @@ import React from "react";
 
 import {
   Flex,
+  Box,
+  SimpleGrid,
   Text,
   Button,
   HStack,
@@ -104,58 +106,62 @@ export const StakingFlow = ({
         mt="1rem"
         fontSize="sm"
       />
-      <Flex mt="2rem" w="100%">
-        <StyledButton
-          bg="transparent"
-          border="2px solid"
-          borderColor="red"
-          color="red"
-          mr="1rem"
-          isLoading={isApproveTxPending}
-          loadingText="Approving..."
-          disabled={
-            utils.formatUnits(allowance, "ether") >=
-            utils.formatUnits(minimumStake, "ether")
-          }
-          onClick={makeAnAllowance}
-          _hover={{
-            opacity: 0.8,
-          }}
-        >
-          Approve
-        </StyledButton>
+      <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
+        <Box>
+          <StyledButton
+            bg="transparent"
+            border="2px solid"
+            borderColor="red"
+            color="red"
+            isLoading={isApproveTxPending}
+            loadingText="Approving..."
+            disabled={
+              utils.formatUnits(allowance, "ether") >=
+              utils.formatUnits(minimumStake, "ether")
+            }
+            onClick={makeAnAllowance}
+            _hover={{
+              opacity: 0.8,
+            }}
+          >
+            Approve
+          </StyledButton>
+        </Box>
         <Tooltip
           isDisabled={canStake}
           label={canNotStakeTooltipLabel}
           shouldWrapChildren
         >
-          <StyledButton
-            bg="red"
-            color="black"
-            isLoading={isStakeTxPending}
-            loadingText="Staking..."
-            disabled={!canStake}
-            onClick={depositStake}
-            _hover={{
-              opacity: 0.8,
-            }}
-          >
-            Stake
-          </StyledButton>
-          <Flex
-            color="white"
-            mt="2rem"
-            mx="auto"
-            p="0.5rem"
-            textDecoration="underline"
-            textUnderlineOffset="4px"
-            _hover={{ cursor: "pointer" }}
-          >
-            <Link href="/deploy-cohort">
-              <Text>Click Here To Deploy Your Own Cohort</Text>
-            </Link>
-          </Flex>
+          <Box>
+            <StyledButton
+              bg="red"
+              color="black"
+              mx="auto"
+              isLoading={isStakeTxPending}
+              loadingText="Staking..."
+              disabled={!canStake}
+              onClick={depositStake}
+              _hover={{
+                opacity: 0.8,
+              }}
+            >
+              Stake
+            </StyledButton>
+          </Box>
         </Tooltip>
+      </SimpleGrid>
+      <Flex
+        color="white"
+        mt="2rem"
+        mx="auto"
+        p="0.5rem"
+        textDecoration="underline"
+        textUnderlineOffset="4px"
+        _hover={{ cursor: "pointer" }}
+      >
+        <Link href="/deploy-cohort">
+          <Text>Click Here To Deploy Your Own Cohort</Text>
+        </Link>
       </Flex>
     </Flex>
   );
