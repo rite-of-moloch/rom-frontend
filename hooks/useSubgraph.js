@@ -101,6 +101,8 @@ export const useCohort = (address) => {
                     implementation
                     initiates {
                         address
+                        joinedAt
+                        tokenId
                     }
                     criesForHelp {
                         sender {
@@ -112,7 +114,7 @@ export const useCohort = (address) => {
             }`, context
         )
         if (res) {
-            //console.log('Cohort data', res.cohort)
+            console.log('Cohort data', res.cohort)
             setCohort(res.cohort);
         }
     })
