@@ -6,6 +6,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   Button,
+  flexbox,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import styled from "@emotion/styled";
@@ -30,6 +31,16 @@ const StyledPrimaryButton = styled(Button)`
   text-transform: uppercase;
   color: black;
   border-radius: 2px;
+  padding-left: 24px;
+  padding-right: 24px;
+`;
+
+const StyledSecondaryButton = styled(Button)`
+  min-width: 160px;
+  height: 50px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  border: 1px solid;
   padding-left: 24px;
   padding-right: 24px;
 `;
@@ -77,17 +88,49 @@ export const Header = () => {
       </Link>
 
       {!context.signerAddress && (
-        <StyledPrimaryButton
-          bg="red"
-          onClick={connectWallet}
-          fontFamily="spaceMono"
-        >
-          CONNECT
-        </StyledPrimaryButton>
+        <Flex gap="2rem" alignItems={"center"}>
+          <Link href="/deploy-cohort">
+            <StyledSecondaryButton color="red" bg="none" fontFamily="spaceMono">
+              Deploy A Cohort
+            </StyledSecondaryButton>
+          </Link>
+          <Link href="/deploy-cohort">
+            <StyledSecondaryButton color="red" bg="none" fontFamily="spaceMono">
+              Docs
+            </StyledSecondaryButton>
+          </Link>
+          <StyledPrimaryButton
+            bg="red"
+            onClick={() => connectWallet()}
+            fontFamily="spaceMono"
+          >
+            CONNECT
+          </StyledPrimaryButton>
+        </Flex>
       )}
 
       {context.signerAddress && (
         <Flex justify="center" align="center" zIndex={5} fontFamily="jetbrains">
+          <Link href="/deploy-cohort">
+            <StyledSecondaryButton
+              color="red"
+              bg="none"
+              fontFamily="spaceMono"
+              mr="2rem"
+            >
+              Deploy A Cohort
+            </StyledSecondaryButton>
+          </Link>
+          <Link href="/deploy-cohort">
+            <StyledSecondaryButton
+              color="red"
+              bg="none"
+              fontFamily="spaceMono"
+              mr="2rem"
+            >
+              Docs
+            </StyledSecondaryButton>
+          </Link>
           <Text color="white" fontFamily="jetbrains" mr="1rem" fontSize=".8rem">
             {SUPPORTED_NETWORK_IDS[context.chainId]}
           </Text>
