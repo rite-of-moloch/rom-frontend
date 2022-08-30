@@ -54,10 +54,8 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false);
   const [cohortAddress, setCohortAddress] = useState("");
 
-  //getInitiate of a specific address, filtered for this cohort
-  //Returns an object
-  const initiate = useInitiate('0x397795f9f76c745dbccf823df0b281e98068eb8e', true);
-  const cohort = useCohort();
+  const initiate = useInitiate(); //Use user's address, filtering by S5 cohort
+  const cohort = useCohort(); //S5 cohort object
 
   const initialFetch = async () => {
     setIsLoading(true);

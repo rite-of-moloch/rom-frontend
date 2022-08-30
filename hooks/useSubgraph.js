@@ -27,7 +27,7 @@ const doFetch = async (_query, context) => {
  * 
  * @param filtered  Optional. Whether to filter the data for current cohort. 
  */
-export const useInitiate = (address, filtered = false) => {
+export const useInitiate = (address, filtered = true) => {
     const context = useContext(AppContext);
     const [initate, setInitiate] = useState(null);
 
@@ -114,7 +114,7 @@ export const useCohort = (address) => {
             }`, context
         )
         if (res) {
-            console.log('Cohort data', res.cohort)
+            //console.log('Cohort data', res.cohort)
             setCohort(res.cohort);
         }
     })
