@@ -54,7 +54,7 @@ export default function Home() {
 
   const initialFetch = async () => {
     setIsLoading(true);
-    if (!initiate) {
+    if (!initiate && cohort) {
       console.log("Fetching ERC20 data");
       await fetchAllowance();
       await fetchRaidBalance();
@@ -65,7 +65,7 @@ export default function Home() {
   const fetchAllowance = async () => {
     const _allowance = await getAllowance(
       context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
+      cohort.token,
       context.signerAddress,
       CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
     );
@@ -76,7 +76,7 @@ export default function Home() {
     const _raidBalance = await getTokenBalance(
       context.ethersProvider,
       context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress
+      cohort.token
     );
     setRaidBalance(_raidBalance);
   };
@@ -122,7 +122,7 @@ export default function Home() {
     try {
       const tx = await approveRaid(
         context.ethersProvider,
-        CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
+        cohort.token,
         CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
         cohort.tokenAmount
       );
