@@ -54,11 +54,9 @@ export default function Home() {
 
   const initialFetch = async () => {
     setIsLoading(true);
-    if (!initiate && cohort) {
-      console.log("Fetching ERC20 data");
-      await fetchAllowance();
-      await fetchRaidBalance();
-    }
+    console.log("Fetching ERC20 data");
+    await fetchAllowance();
+    await fetchRaidBalance();
     setIsLoading(false);
   };
 
@@ -208,10 +206,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (context.chainId in SUPPORTED_NETWORK_IDS) {
+    if (context.chainId in SUPPORTED_NETWORK_IDS && cohort) {
       initialFetch();
     }
-  }, [context.chainId]);
+  }, [context.chainId, cohort]);
 
   const canStake = cohort &&
     utils.formatUnits(allowance, "ether") >=
