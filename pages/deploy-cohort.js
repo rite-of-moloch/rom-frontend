@@ -3,20 +3,19 @@ import {
   Flex,
   SimpleGrid,
   Box,
-  HStack,
-  VStack,
   Text,
   FormControl,
   FormLabel,
   Input,
-  NumberInput,
+  Heading,
   Button,
-  ExternalLinkIcon,
 } from "@chakra-ui/react";
 import { React, useState, useEffect, useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { ethers, Contract, utils, BigNumber } from "ethers";
 import { CONTRACT_ADDRESSES } from "../utils/constants";
+import { HeaderOne } from "../shared/Header0ne";
+import { DeployCohortButton } from "../shared/DeployCohortButton";
 
 export default function deployCohort() {
   const [membershipCriteria, setMembershipCriteria] = useState("");
@@ -100,19 +99,30 @@ export default function deployCohort() {
       fontFamily="spaceMono"
       px="2rem"
     >
-      {!context.signerAddress ? (
-        <Text
-          w={{ md: "90%", sm: "100%" }}
-          bg="purple"
-          p="15px"
-          fontFamily="rubik"
-          fontSize={{ lg: "1.2rem", sm: "1rem" }}
-          my="2rem"
+      {!context.signerAddress && <HeaderOne />}
+      {context.signerAddress ? (
+        <Heading
+          as="h1"
+          fontFamily="uncial"
+          color="red"
           textAlign="center"
+          mb="2rem"
         >
-          Deploy Your Own Cohort
-        </Text>
+          SLAY OR BE SLAIN...
+        </Heading>
       ) : null}
+      <Text
+        w={{ md: "90%", sm: "100%" }}
+        bg="purple"
+        p="15px"
+        fontFamily="rubik"
+        fontSize={{ lg: "1.2rem", sm: "1rem" }}
+        mb="2rem"
+        textAlign="center"
+      >
+        Deploy Your Own Cohort
+      </Text>
+
       {!context.signerAddress ? (
         <Text color="red" mt="2rem" mb="4rem" fontSize="lg">
           Connect your wallet to get started, soldier...

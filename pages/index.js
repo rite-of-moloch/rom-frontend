@@ -5,12 +5,9 @@ import {
   Flex,
   Box,
   Spinner,
-  Image,
+  Heading,
   Link as ChakraLink,
-  HStack,
   useToast,
-  Checkbox,
-  Input,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
 import { ethers, utils } from "ethers";
@@ -273,7 +270,18 @@ export default function Home() {
       fontFamily="spaceMono"
       px="2rem"
     >
-      <HeaderOne />
+      {!context.signerAddress && <HeaderOne />}
+      {context.signerAddress ? (
+        <Heading
+          as="h1"
+          fontFamily="uncial"
+          color="red"
+          textAlign="center"
+          mb="2rem"
+        >
+          SLAY OR BE SLAIN...
+        </Heading>
+      ) : null}
       <CohortHeader />
       {!context.signerAddress && <PreStake />}
 
