@@ -41,6 +41,8 @@ export const useInitiate = (address, filtered = false) => {
                     deadline
                     stake
                     joinedAt
+                    claimed
+                    sacrificed
                     cohort {
                         id
                         time

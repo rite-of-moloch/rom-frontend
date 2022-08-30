@@ -20,7 +20,7 @@ export const CONTRACT_ADDRESSES = {
 
 export const SUBGRAPH_URLS = {
   4: 'https://api.thegraph.com/subgraphs/name/marshby/rite-of-moloch-rinkeby',
-  100: ''
+  100: 'https://api.thegraph.com/subgraphs/name/marshby/rite-of-moloch'
 }
 
 export const TOKEN_TICKER = {
