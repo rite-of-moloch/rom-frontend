@@ -134,7 +134,7 @@ export default function Home() {
             textDecoration="underline"
             cursor="pointer"
           >
-            transaction
+            transaction: {txHash.hash}
           </ChakraLink>
         </Box>
       ),
