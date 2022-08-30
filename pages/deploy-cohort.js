@@ -99,18 +99,7 @@ export default function deployCohort() {
       fontFamily="spaceMono"
       px="2rem"
     >
-      {!context.signerAddress && <HeaderOne />}
-      {context.signerAddress ? (
-        <Heading
-          as="h1"
-          fontFamily="uncial"
-          color="red"
-          textAlign="center"
-          mb="2rem"
-        >
-          SLAY OR BE SLAIN...
-        </Heading>
-      ) : null}
+      <HeaderOne />
       <Text
         w={{ md: "90%", sm: "100%" }}
         bg="purple"
