@@ -35,7 +35,7 @@ import { CohortHeader } from "../shared/CohortHeader";
 import { PreStake } from "../shared/PreStake";
 import { HeaderOne } from "../shared/Header0ne";
 import { DeployCohortButton } from "../shared/DeployCohortButton";
-import { useInitiate } from "../hooks/useSubgraph";
+import { useCohort, useInitiate } from "../hooks/useSubgraph";
 
 export default function Home() {
   const context = useContext(AppContext);
@@ -57,14 +57,7 @@ export default function Home() {
   //getInitiate of a specific address, filtered for this cohort
   //Returns an object
   const initiate = useInitiate('0x397795f9f76c745dbccf823df0b281e98068eb8e', true);
-
-  //getInitiate of the user's address, filtered for this cohort
-  //Returns an object
-  const initiate2 = useInitiate(null, true);
-
-  //getInitiate of user's address, for all cohorts it has joined
-  //Returns an array (even if it's just part of one cohort)
-  const initiate3 = useInitiate();
+  const cohort = useCohort();
 
   const initialFetch = async () => {
     setIsLoading(true);
