@@ -258,7 +258,7 @@ export default function Home() {
       >
         {!isLoading &&
           (initiate ? (
-            <RiteStaked balance={utils.formatEther(initiate.stake)} deadline={initiate.deadline} />
+            <RiteStaked balance={initiate ? 1 : 0} deadline={initiate.deadline} />
           ) : cohort && (
             <StakingFlow
               minimumStake={cohort.tokenAmount}
