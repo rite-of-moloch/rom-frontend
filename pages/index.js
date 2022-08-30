@@ -17,9 +17,7 @@ import { ethers, utils } from "ethers";
 import styled from "@emotion/styled";
 
 import {
-  getMinimumStake,
   getTokenBalance,
-  getStakeDeadline,
   getAllowance,
   approveRaid,
   joinInitiation,
@@ -41,10 +39,7 @@ export default function Home() {
   const context = useContext(AppContext);
   const toast = useToast();
 
-  const [minimumStake, setMinimumStake] = useState(0);
-  const [riteBalance, setRiteBalance] = useState(0);
   const [raidBalance, setRaidBalance] = useState(0);
-  const [stakeDeadline, setStakeDeadline] = useState(0);
   const [allowance, setAllowance] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -59,43 +54,12 @@ export default function Home() {
 
   const initialFetch = async () => {
     setIsLoading(true);
-    await fetchRiteBalance();
-    setIsLoading(false);
-  };
-
-  const fetchRiteBalance = async () => {
-    const _riteBalance = await getTokenBalance(
-      context.ethersProvider,
-      context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
-    );
-
-    if (_riteBalance > 0) {
-      setRiteBalance(_riteBalance);
-      await fetchStakeDeadline();
-    } else {
-      await fetchMinimumStake();
+    if (!initiate) {
+      console.log("Fetching ERC20 data");
       await fetchAllowance();
       await fetchRaidBalance();
     }
-  };
-
-  const fetchStakeDeadline = async () => {
-    const _stakeDeadline = await getStakeDeadline(
-      context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-      context.signerAddress
-    );
-    // setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // for rinkeby testing
-    setStakeDeadline(Number(_stakeDeadline));
-  };
-
-  const fetchMinimumStake = async () => {
-    const _stake = await getMinimumStake(
-      context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
-    );
-    setMinimumStake(_stake);
+    setIsLoading(false);
   };
 
   const fetchAllowance = async () => {
@@ -160,7 +124,7 @@ export default function Home() {
         context.ethersProvider,
         CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
         CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        minimumStake
+        cohort.tokenAmount
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -219,9 +183,7 @@ export default function Home() {
       if (tx) {
         triggerToast(tx.hash);
         const { status } = await tx.wait();
-        if (status === 1) {
-          await fetchRiteBalance();
-        } else {
+        if (status !== 1) {
           toast({
             position: "bottom-left",
             render: () => (
@@ -251,19 +213,19 @@ export default function Home() {
     }
   }, [context.chainId]);
 
-  const canStake =
+  const canStake = cohort &&
     utils.formatUnits(allowance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
+    utils.formatUnits(cohort.tokenAmount, "ether") &&
     utils.formatUnits(raidBalance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
+    utils.formatUnits(cohort.tokenAmount, "ether") &&
     !ethers.utils.isAddress(cohortAddress);
 
   const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
     ? "Please input a valid wallet address"
     : utils.formatUnits(allowance, "ether") <
-      utils.formatUnits(minimumStake, "ether")
-    ? "Allowance is smaller than the minimum stake amount."
-    : "Your RAID balance is too low";
+      utils.formatUnits(cohort.tokenAmount, "ether")
+      ? "Allowance is smaller than the minimum stake amount."
+      : "Your RAID balance is too low";
 
   const show =
     context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;
@@ -295,11 +257,11 @@ export default function Home() {
         w="100%"
       >
         {!isLoading &&
-          (riteBalance > 0 ? (
-            <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
-          ) : (
+          (initiate ? (
+            <RiteStaked balance={utils.formatEther(initiate.stake)} deadline={initiate.deadline} />
+          ) : cohort && (
             <StakingFlow
-              minimumStake={minimumStake}
+              minimumStake={cohort.tokenAmount}
               context={context}
               raidBalance={raidBalance}
               allowance={allowance}
