@@ -4,8 +4,6 @@ import { CONTRACT_ADDRESSES, SUBGRAPH_URLS } from "../utils/constants";
 
 const doFetch = async (_query, context) => {
     if (context.chainId && context.signerAddress) {
-        console.log('Fetching subgraph data'/*, _query*/);
-
         const data = await fetch(SUBGRAPH_URLS[context.chainId], {
             method: 'POST',
             contentType: 'application/json',
@@ -32,6 +30,7 @@ export const useInitiate = (address, filtered = true) => {
     const [initate, setInitiate] = useState(null);
 
     const fetchInitiate = useCallback(async () => {
+        console.log('Fetching subgraph initiate data');
         const res = await doFetch(
             `{
                 initiates(where: {address: "${address || context.signerAddress}"}) {
@@ -88,6 +87,7 @@ export const useCohort = (address) => {
 
     const fetchCohorts = useCallback(async () => {
         if (!address && !context.chainId) { return }
+        console.log('Fetching subgraph cohort data');
         const res = await doFetch(
             `{
                 cohort(id: "${address ? address.toLowerCase() : CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress.toLowerCase()}") {
