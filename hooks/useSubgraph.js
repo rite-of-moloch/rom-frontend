@@ -3,18 +3,16 @@ import { AppContext } from "../context/AppContext";
 import { CONTRACT_ADDRESSES, SUBGRAPH_URLS } from "../utils/constants";
 
 const doFetch = async (_query, context) => {
-    if (context.chainId && context.signerAddress) {
-        const data = await fetch(SUBGRAPH_URLS[context.chainId], {
-            method: 'POST',
-            contentType: 'application/json',
-            body: JSON.stringify({ query: _query })
-        })
+    const data = await fetch(SUBGRAPH_URLS[context.chainId], {
+        method: 'POST',
+        contentType: 'application/json',
+        body: JSON.stringify({ query: _query })
+    })
 
-        const js = await data.json();
+    const js = await data.json();
 
-        if (data.status == 200) {
-            return (js.data);
-        }
+    if (data.status == 200) {
+        return (js.data);
     }
 }
 
@@ -30,6 +28,7 @@ export const useInitiate = (address, filtered = true) => {
     const [initate, setInitiate] = useState(null);
 
     const fetchInitiate = useCallback(async () => {
+        if (!address && !context.signerAddress) { return }
         console.log('Fetching subgraph initiate data');
         const res = await doFetch(
             `{
@@ -62,7 +61,7 @@ export const useInitiate = (address, filtered = true) => {
             if (filtered) {
                 const a = res.initiates.filter(init => init.cohort.id == CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress.toLowerCase());
                 setInitiate(a[0]);
-                //console.log('Initiate data', a[0])
+                console.log('Initiate data', a[0])
             } else {
                 setInitiate(res.initiates.length > 0 ? res.initiates : null);
             }
@@ -70,7 +69,9 @@ export const useInitiate = (address, filtered = true) => {
     })
 
     useEffect(() => {
-        fetchInitiate();
+        if (context.chainId) {
+            fetchInitiate();
+        }
     }, [context.chainId, context.signerAddress])
 
     return (initate)
@@ -120,7 +121,9 @@ export const useCohort = (address) => {
     })
 
     useEffect(() => {
-        fetchCohorts();
+        if (context.chainId) {
+            fetchCohorts();
+        }
     }, [context.chainId, context.signerAddress])
 
     return (cohort)
