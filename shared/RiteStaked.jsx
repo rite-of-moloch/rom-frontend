@@ -1,9 +1,32 @@
-import React from "react";
-
-import { Flex, Image as ChakraImage, Text } from "@chakra-ui/react";
+import { React, useState } from "react";
+import { Flex, Image, Text, Checkbox } from "@chakra-ui/react";
 import { CountdownTimer } from "./CountdownTimer";
+import { StakingFlow } from "./StakingFlow";
 
-export const RiteStaked = ({ balance, deadline }) => {
+export const RiteStaked = ({
+  displaySponsorCohort,
+  setDisplaySponsorCohort,
+  balance,
+  deadline,
+  minimumStake,
+  context,
+  raidBalance,
+  allowance,
+  isChecked,
+  handleIsChecked,
+  cohortAddress,
+  handleCohortAddress,
+  isApproveTxPending,
+  makeAnAllowance,
+  canStake,
+  canNotStakeTooltipLabel,
+  isStakeTxPending,
+  depositStake,
+}) => {
+  const handleSponsorCohort = () => {
+    setDisplaySponsorCohort(!displaySponsorCohort);
+  };
+
   return (
     <Flex
       w="100%"
@@ -12,11 +35,11 @@ export const RiteStaked = ({ balance, deadline }) => {
       justifyContent="space-between"
       p="15px"
     >
-      <ChakraImage
-        src="/assets/token_img.jpg"
-        w="150px"
+      <Image
+        src="/assets/season-v-token.svg"
+        w="250px"
         borderRadius="20px"
-        mb="2rem"
+        mt="-3rem"
         alt="Rite Token"
       />
 
@@ -27,6 +50,39 @@ export const RiteStaked = ({ balance, deadline }) => {
         Deadline - {new Date(deadline * 1000).toLocaleString()}
       </Text>
       <CountdownTimer targetDate={new Date(deadline * 1000).getTime()} />
+
+      <Flex
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="center"
+        mt="2em"
+      >
+        <Checkbox onChange={handleSponsorCohort} />
+        <Text color="red" fontFamily="jetbrains" fontSize=".8rem" ml="1em">
+          Sponsor a Cohort member
+        </Text>
+      </Flex>
+      {displaySponsorCohort ? (
+        <StakingFlow
+          minimumStake={minimumStake}
+          context={context}
+          raidBalance={raidBalance}
+          allowance={allowance}
+          isChecked={isChecked}
+          displaySponsorCohort={displaySponsorCohort}
+          checkboxDisplay={displaySponsorCohort ? "none" : null}
+          sponsorCohortTextDisplay={displaySponsorCohort ? "none" : null}
+          handleIsChecked={handleIsChecked}
+          cohortAddress={cohortAddress}
+          handleCohortAddress={handleCohortAddress}
+          isApproveTxPending={isApproveTxPending}
+          makeAnAllowance={makeAnAllowance}
+          canStake={canStake}
+          canNotStakeTooltipLabel={canNotStakeTooltipLabel}
+          isStakeTxPending={isStakeTxPending}
+          depositStake={depositStake}
+        />
+      ) : null}
     </Flex>
   );
 };

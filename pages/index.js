@@ -5,12 +5,9 @@ import {
   Flex,
   Box,
   Spinner,
-  Image,
+  Heading,
   Link as ChakraLink,
-  HStack,
   useToast,
-  Checkbox,
-  Input,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
 import { ethers, utils } from "ethers";
@@ -51,6 +48,7 @@ export default function Home() {
   const [isStakeTxPending, setIsStakeTxPending] = useState(false);
 
   const [isChecked, setIsChecked] = useState(false);
+  const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
   const [cohortAddress, setCohortAddress] = useState("");
 
   const initialFetch = async () => {
@@ -292,9 +290,29 @@ export default function Home() {
       >
         {!isLoading &&
           (riteBalance > 0 ? (
-            <RiteStaked balance={riteBalance} deadline={stakeDeadline} />
+            <RiteStaked
+              setDisplaySponsorCohort={setDisplaySponsorCohort}
+              displaySponsorCohort={displaySponsorCohort}
+              balance={riteBalance}
+              deadline={stakeDeadline}
+              minimumStake={minimumStake}
+              context={context}
+              raidBalance={raidBalance}
+              allowance={allowance}
+              isChecked={isChecked}
+              handleIsChecked={handleIsChecked}
+              cohortAddress={cohortAddress}
+              handleCohortAddress={handleCohortAddress}
+              isApproveTxPending={isApproveTxPending}
+              makeAnAllowance={makeAnAllowance}
+              canStake={canStake}
+              canNotStakeTooltipLabel={canNotStakeTooltipLabel}
+              isStakeTxPending={isStakeTxPending}
+              depositStake={depositStake}
+            />
           ) : (
             <StakingFlow
+              displaySponsorCohort={displaySponsorCohort}
               minimumStake={minimumStake}
               context={context}
               raidBalance={raidBalance}

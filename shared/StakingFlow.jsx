@@ -36,6 +36,9 @@ export const StakingFlow = ({
   context,
   raidBalance,
   allowance,
+  displaySponsorCohort,
+  checkboxDisplay,
+  sponsorCohortTextDisplay,
   isChecked,
   handleIsChecked,
   cohortAddress,
@@ -86,8 +89,15 @@ export const StakingFlow = ({
           defaultChecked
           isChecked={isChecked}
           onChange={handleIsChecked}
+          display={checkboxDisplay}
         />
-        <Text color="red" fontFamily="jetbrains" fontSize=".8rem" ml="1em">
+        <Text
+          color="red"
+          fontFamily="jetbrains"
+          fontSize=".8rem"
+          ml="1em"
+          display={sponsorCohortTextDisplay}
+        >
           Sponsor a Cohort member
         </Text>
       </Flex>
@@ -96,14 +106,14 @@ export const StakingFlow = ({
         placeholder="Sponsor's member wallet address"
         value={cohortAddress}
         _placeholder={{ color: "white", fontSize: "sm" }}
-        display={isChecked ? "inline" : "none"}
+        display={isChecked || displaySponsorCohort ? "inline" : "none"}
         bg="#741739"
         color="white"
         rounded="none"
         border="0px"
         opacity="none"
-        width={{ md: "50%", sm: "full" }}
-        mt="1rem"
+        width="full"
+        mt={!displaySponsorCohort ? "1rem" : "-1rem"}
         fontSize="sm"
       />
       <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
