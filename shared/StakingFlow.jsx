@@ -98,7 +98,7 @@ export const StakingFlow = ({
           ml="1em"
           display={sponsorCohortTextDisplay}
         >
-          Sponsor a Cohort member
+          Sponsor an Initiate
         </Text>
       </Flex>
       <Input

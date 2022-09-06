@@ -59,7 +59,7 @@ export const RiteStaked = ({
       >
         <Checkbox onChange={handleSponsorCohort} />
         <Text color="red" fontFamily="jetbrains" fontSize=".8rem" ml="1em">
-          Sponsor a Cohort member
+          Sponsor an Initiate
         </Text>
       </Flex>
       {displaySponsorCohort ? (
