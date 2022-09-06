@@ -103,7 +103,7 @@ export const StakingFlow = ({
       </Flex>
       <Input
         onChange={handleCohortAddress}
-        placeholder="Sponsor's member wallet address"
+        placeholder="Sponsored initiate's wallet address"
         value={cohortAddress}
         _placeholder={{ color: "white", fontSize: "sm" }}
         display={isChecked || displaySponsorCohort ? "inline" : "none"}
