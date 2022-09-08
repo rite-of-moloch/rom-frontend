@@ -61,7 +61,7 @@ export default function Home() {
     const _riteBalance = await getTokenBalance(
       context.ethersProvider,
       context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      contractAddress().riteOfMolochAddress
     );
 
     if (_riteBalance > 0) {
@@ -77,7 +77,7 @@ export default function Home() {
   const fetchStakeDeadline = async () => {
     const _stakeDeadline = await getStakeDeadline(
       context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
+      contractAddress().riteOfMolochAddress,
       context.signerAddress
     );
     // setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // for rinkeby testing
@@ -87,7 +87,7 @@ export default function Home() {
   const fetchMinimumStake = async () => {
     const _stake = await getMinimumStake(
       context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      contractAddress().riteOfMolochAddress
     );
     setMinimumStake(_stake);
   };
@@ -95,9 +95,9 @@ export default function Home() {
   const fetchAllowance = async () => {
     const _allowance = await getAllowance(
       context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
+      contractAddress().erc20TokenAddress,
       context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      contractAddress().riteOfMolochAddress
     );
     setAllowance(_allowance);
   };
@@ -106,7 +106,7 @@ export default function Home() {
     const _raidBalance = await getTokenBalance(
       context.ethersProvider,
       context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress
+      contractAddress().erc20TokenAddress
     );
     setRaidBalance(_raidBalance);
   };
@@ -152,8 +152,8 @@ export default function Home() {
     try {
       const tx = await approveRaid(
         context.ethersProvider,
-        CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
-        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
+        contractAddress().erc20TokenAddress,
+        contractAddress().riteOfMolochAddress,
         minimumStake
       );
       if (tx) {
@@ -207,8 +207,8 @@ export default function Home() {
     try {
       const tx = await joinInitiation(
         context.ethersProvider,
-        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        cohortAddress != "" && isChecked ? cohortAddress : context.signerAddress
+        contractAddress().riteOfMolochAddress,
+        (cohortAddress != "" && isChecked) ? cohortAddress : context.signerAddress
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -244,18 +244,22 @@ export default function Home() {
       initialFetch();
     }
   }, [context.chainId]);
+  
+  const contractAddress = () => CONTRACT_ADDRESSES[context.chainId];
+  const tokenTicker = () => TOKEN_TICKER[context.chainId];
+
+  const formatedAllowance = () => utils.formatUnits(allowance, "ether");
+  const formatedMinumumStake = () => utils.formatUnits(minimumStake, "ether");
+  const formatedRaidBalance = () => utils.formatUnits(raidBalance, "ether");
 
   const canStake =
-    utils.formatUnits(allowance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
-    utils.formatUnits(raidBalance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
+  formatedAllowance() >= formatedMinumumStake() &&
+  formatedRaidBalance() >= formatedMinumumStake() &&
     !ethers.utils.isAddress(cohortAddress);
 
   const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
     ? "Please input a valid wallet address"
-    : utils.formatUnits(allowance, "ether") <
-      utils.formatUnits(minimumStake, "ether")
+    : formatedAllowance() < formatedMinumumStake()
     ? "Allowance is smaller than the minimum stake amount."
     : "Your RAID balance is too low";
 
