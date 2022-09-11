@@ -24,7 +24,7 @@ const StakingContextProvider = ({ children }) => {
   };
 
   const handleSponsorCohort = () => {
-    setDisplaySponsorCohort(!displaySponsorCohort);
+    setDisplaySponsorCohort((displaySponsorCohort) => !displaySponsorCohort);
   };
 
   const value = {
@@ -60,4 +60,4 @@ const StakingContextProvider = ({ children }) => {
   );
 };
 
-export default { StakingContext, StakingContextProvider };
+export { StakingContext, StakingContextProvider };

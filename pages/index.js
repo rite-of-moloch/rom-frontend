@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from "react";
-import { Flex, Box, Spinner, Heading, Link, useToast } from "@chakra-ui/react";
+import { Flex, Box, Spinner, Link, useToast } from "@chakra-ui/react";
 import { ethers, utils } from "ethers";
 // import styled from "@emotion/styled";
 
@@ -14,6 +14,7 @@ import {
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
+import { StakingContext } from "../context/StakingContext";
 import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 import { SUPPORTED_NETWORK_IDS } from "../config";
 import { NetworkError } from "../shared/NetworkError";
@@ -26,6 +27,7 @@ import { DeployCohortButton } from "../shared/DeployCohortButton";
 
 export default function Home() {
   const appContext = useContext(AppContext);
+  const stakingContext = useContext(StakingContext);
   const toast = useToast();
 
   const [riteBalance, setRiteBalance] = useState(0);
@@ -221,16 +223,16 @@ export default function Home() {
   }, [appContext.chainId]);
 
   const canStake =
-    utils.formatUnits(allowance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
-    utils.formatUnits(raidBalance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
-    !ethers.utils.isAddress(cohortAddress);
+    utils.formatUnits(stakingContext.allowance, "ether") >=
+      utils.formatUnits(stakingContext.minimumStake, "ether") &&
+    utils.formatUnits(stakingContext.raidBalance, "ether") >=
+      utils.formatUnits(stakingContext.minimumStake, "ether") &&
+    !ethers.utils.isAddress(stakingContext.cohortAddress);
 
   const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
     ? "Please input a valid wallet address"
-    : utils.formatUnits(allowance, "ether") <
-      utils.formatUnits(minimumStake, "ether")
+    : utils.formatUnits(stakingContext.allowance, "ether") <
+      utils.formatUnits(stakingContext.minimumStake, "ether")
     ? "Allowance is smaller than the minimum stake amount."
     : "Your RAID balance is too low";
 

@@ -15,7 +15,6 @@ import { utils } from "ethers";
 import styled from "@emotion/styled";
 import { StakingContext } from "../context/StakingContext";
 import { AppContext } from "../context/AppContext";
-
 import { TOKEN_TICKER } from "../utils/constants";
 
 const StyledButton = styled(Button)`

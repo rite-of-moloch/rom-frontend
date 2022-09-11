@@ -2,7 +2,7 @@ import { React, useContext } from "react";
 import { Flex, Image, Text, Checkbox } from "@chakra-ui/react";
 import { CountdownTimer } from "./CountdownTimer";
 import { StakingFlow } from "./StakingFlow";
-import { AppContext } from "../context/AppContext";
+// import { AppContext } from "../context/AppContext";
 import { StakingContext } from "../context/StakingContext";
 
 export const RiteStaked = ({
@@ -11,10 +11,9 @@ export const RiteStaked = ({
   makeAnAllowance,
   canStake,
   canNotStakeTooltipLabel,
-
   depositStake,
 }) => {
-  const appContext = useContext(AppContext);
+  // const appContext = useContext(AppContext);
   const stakingContext = useContext(StakingContext);
 
   return (
