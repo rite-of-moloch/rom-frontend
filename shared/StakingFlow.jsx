@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { useContext } from "react";
 import {
   Flex,
   Box,
@@ -14,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { utils } from "ethers";
 import styled from "@emotion/styled";
+import { StakingContext } from "../context/StakingContext";
+import { AppContext } from "../context/AppContext";
 
 import { TOKEN_TICKER } from "../utils/constants";
 
@@ -32,24 +33,14 @@ const StyledHStack = styled(HStack)`
 `;
 
 export const StakingFlow = ({
-  minimumStake,
-  context,
-  raidBalance,
-  allowance,
-  displaySponsorCohort,
-  checkboxDisplay,
-  sponsorCohortTextDisplay,
-  isChecked,
-  handleIsChecked,
-  cohortAddress,
-  handleCohortAddress,
-  isApproveTxPending,
   makeAnAllowance,
   canStake,
   canNotStakeTooltipLabel,
-  isStakeTxPending,
   depositStake,
 }) => {
+  const appContext = useContext(AppContext);
+  const stakingContext = useContext(StakingContext);
+
   return (
     <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
       <StyledHStack mb="1rem">
@@ -57,26 +48,26 @@ export const StakingFlow = ({
           Required Stake
         </Text>
         <Text color="white" fontSize={{ lg: "1.2rem", sm: ".8rem" }}>
-          {utils.formatUnits(minimumStake, "ether")}{" "}
-          {TOKEN_TICKER[context.chainId]}
+          {utils.formatUnits(stakingContext.minimumStake, "ether")}{" "}
+          {TOKEN_TICKER[appContext.chainId]}
         </Text>
       </StyledHStack>
       <StyledHStack>
         <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-          Your {TOKEN_TICKER[context.chainId]} balance
+          Your {TOKEN_TICKER[appContext.chainId]} balance
         </Text>
         <Text color="white" fontSize=".8rem">
-          {utils.formatUnits(raidBalance, "ether")}{" "}
-          {TOKEN_TICKER[context.chainId]}
+          {utils.formatUnits(stakingContext.raidBalance, "ether")}{" "}
+          {TOKEN_TICKER[appContext.chainId]}
         </Text>
       </StyledHStack>
       <StyledHStack>
         <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-          Your {TOKEN_TICKER[context.chainId]} allowance
+          Your {TOKEN_TICKER[appContext.chainId]} allowance
         </Text>
         <Text color="white" fontSize=".8rem">
           {utils.formatUnits(allowance, "ether")}{" "}
-          {TOKEN_TICKER[context.chainId]}
+          {TOKEN_TICKER[appContext.chainId]}
         </Text>
       </StyledHStack>
       <Flex
@@ -87,33 +78,37 @@ export const StakingFlow = ({
       >
         <Checkbox
           defaultChecked
-          isChecked={isChecked}
-          onChange={handleIsChecked}
-          display={checkboxDisplay}
+          isChecked={stakingContext.isChecked}
+          onChange={stakingContext.handleIsChecked}
+          display={stakingContext.displaySponsorCohort ? "none" : null}
         />
         <Text
           color="red"
           fontFamily="jetbrains"
           fontSize=".8rem"
           ml="1em"
-          display={sponsorCohortTextDisplay}
+          display={stakingContext.displaySponsorCohort ? "none" : null}
         >
           Sponsor an Initiate
         </Text>
       </Flex>
       <Input
-        onChange={handleCohortAddress}
+        onChange={stakingContext.handleCohortAddress}
         placeholder="Sponsored initiate's wallet address"
-        value={cohortAddress}
+        value={stakingContext.cohortAddress}
         _placeholder={{ color: "white", fontSize: "sm" }}
-        display={isChecked || displaySponsorCohort ? "inline" : "none"}
+        display={
+          stakingContext.isChecked || stakingContext.displaySponsorCohort
+            ? "inline"
+            : "none"
+        }
         bg="#741739"
         color="white"
         rounded="none"
         border="0px"
         opacity="none"
         width="full"
-        mt={!displaySponsorCohort ? "1rem" : "-1rem"}
+        mt={!stakingContext.displaySponsorCohort ? "1rem" : "-1rem"}
         fontSize="sm"
       />
       <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
@@ -126,8 +121,8 @@ export const StakingFlow = ({
             isLoading={isApproveTxPending}
             loadingText="Approving..."
             disabled={
-              utils.formatUnits(allowance, "ether") >=
-              utils.formatUnits(minimumStake, "ether")
+              utils.formatUnits(stakingContext.allowance, "ether") >=
+              utils.formatUnits(stakingContext.minimumStake, "ether")
             }
             onClick={makeAnAllowance}
             _hover={{
@@ -147,7 +142,7 @@ export const StakingFlow = ({
               bg="red"
               color="black"
               mx="auto"
-              isLoading={isStakeTxPending}
+              isLoading={stakingContext.isStakeTxPending}
               loadingText="Staking..."
               disabled={!canStake}
               onClick={depositStake}

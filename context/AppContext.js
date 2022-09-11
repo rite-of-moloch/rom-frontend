@@ -1,4 +1,4 @@
-import React, { Component, createContext } from 'react';
+import React, { Component, createContext } from "react";
 
 export const AppContext = createContext();
 
@@ -8,12 +8,12 @@ class AppContextProvider extends Component {
     ethersProvider: null,
     web3: null,
     signerAddress: null,
-    chainId: null
+    chainId: null,
   };
 
   setWeb3Data = (data) => {
     this.setState({
-      ...data
+      ...data,
     });
   };
 
@@ -23,7 +23,7 @@ class AppContextProvider extends Component {
         value={{
           ...this.state,
           updateStage: this.updateStage,
-          setWeb3Data: this.setWeb3Data
+          setWeb3Data: this.setWeb3Data,
         }}
       >
         {this.props.children}

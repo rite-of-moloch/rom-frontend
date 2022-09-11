@@ -1,35 +1,63 @@
-import React, { Component, createContext } from "react";
-import { utils } from "ethers";
+import React, { useState, createContext } from "react";
 
-export const StakingFlowContext = createContext();
+const StakingContext = createContext();
 
-class StakingFlowContextProvider extends Component {
-  state = {
-    minimumStake: 0,
-    raidBalance: 0,
-    allowance: 0,
-    displaySponsorCohort: false,
-    checkboxDisplay: false,
-    sponsorCohortTextDisplay: null,
-    isChecked: false,
-    handleIsChecked: null,
-    cohortAddress: "",
-    handleCohortAddress: null,
-    isApproveTxPending: false,
-    isStakeTxPending: false,
+const StakingContextProvider = ({ children }) => {
+  const [minimumStake, setMinimumStake] = useState(0);
+  const [raidBalance, setRaidBalance] = useState(0);
+  const [allowance, setAllowance] = useState(0);
+  const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
+  const [checkboxDisplay, setCheckboxDisplay] = useState(false);
+  const [sponsorCohortTextDisplay, setSponsorCohortTextDisplay] =
+    useState(null);
+  const [isChecked, setIsChecked] = useState(false);
+  const [cohortAddress, setCohortAddress] = useState("");
+  const [isApproveTxPending, setIsApproveTxPending] = useState(false);
+  const [isStakeTxPending, setIsStakeTxPending] = useState(false);
+
+  const handleIsChecked = () => {
+    setIsChecked((isChecked) => !isChecked);
   };
 
-  render() {
-    return (
-      <StakingFlowContext.Provider
-        value={{
-          ...this.state,
-        }}
-      >
-        {this.props.children}
-      </StakingFlowContext.Provider>
-    );
-  }
-}
+  const handleCohortAddress = (e) => {
+    setCohortAddress(e.target.value);
+  };
 
-export default StakingFlowContextProvider;
+  const handleSponsorCohort = () => {
+    setDisplaySponsorCohort(!displaySponsorCohort);
+  };
+
+  const value = {
+    minimumStake,
+    setMinimumStake,
+    raidBalance,
+    setRaidBalance,
+    allowance,
+    setAllowance,
+    displaySponsorCohort,
+    setDisplaySponsorCohort,
+    checkboxDisplay,
+    setCheckboxDisplay,
+    sponsorCohortTextDisplay,
+    setSponsorCohortTextDisplay,
+    isChecked,
+    setIsChecked,
+    setHandleIsChecked,
+    cohortAddress,
+    setCohortAddress,
+    setHandleCohortAddress,
+    isApproveTxPending,
+    setIsApproveTxPending,
+    isStakeTxPending,
+    setIsStakeTxPending,
+    handleIsChecked,
+    handleCohortAddress,
+    handleSponsorCohort,
+  };
+
+  return (
+    <StakingContext.Provider value={value}>{children}</StakingContext.Provider>
+  );
+};
+
+export default { StakingContext, StakingContextProvider };

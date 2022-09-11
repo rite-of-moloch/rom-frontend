@@ -1,31 +1,21 @@
-import { React, useState } from "react";
+import { React, useContext } from "react";
 import { Flex, Image, Text, Checkbox } from "@chakra-ui/react";
 import { CountdownTimer } from "./CountdownTimer";
 import { StakingFlow } from "./StakingFlow";
+import { AppContext } from "../context/AppContext";
+import { StakingContext } from "../context/StakingContext";
 
 export const RiteStaked = ({
-  displaySponsorCohort,
-  setDisplaySponsorCohort,
   balance,
   deadline,
-  minimumStake,
-  context,
-  raidBalance,
-  allowance,
-  isChecked,
-  handleIsChecked,
-  cohortAddress,
-  handleCohortAddress,
-  isApproveTxPending,
   makeAnAllowance,
   canStake,
   canNotStakeTooltipLabel,
-  isStakeTxPending,
+
   depositStake,
 }) => {
-  const handleSponsorCohort = () => {
-    setDisplaySponsorCohort(!displaySponsorCohort);
-  };
+  const appContext = useContext(AppContext);
+  const stakingContext = useContext(StakingContext);
 
   return (
     <Flex
@@ -57,29 +47,16 @@ export const RiteStaked = ({
         justifyContent="center"
         mt="2em"
       >
-        <Checkbox onChange={handleSponsorCohort} />
+        <Checkbox onChange={stakingContext.handleSponsorCohort} />
         <Text color="red" fontFamily="jetbrains" fontSize=".8rem" ml="1em">
           Sponsor an Initiate
         </Text>
       </Flex>
       {displaySponsorCohort ? (
         <StakingFlow
-          minimumStake={minimumStake}
-          context={context}
-          raidBalance={raidBalance}
-          allowance={allowance}
-          isChecked={isChecked}
-          displaySponsorCohort={displaySponsorCohort}
-          checkboxDisplay={displaySponsorCohort ? "none" : null}
-          sponsorCohortTextDisplay={displaySponsorCohort ? "none" : null}
-          handleIsChecked={handleIsChecked}
-          cohortAddress={cohortAddress}
-          handleCohortAddress={handleCohortAddress}
-          isApproveTxPending={isApproveTxPending}
           makeAnAllowance={makeAnAllowance}
           canStake={canStake}
           canNotStakeTooltipLabel={canNotStakeTooltipLabel}
-          isStakeTxPending={isStakeTxPending}
           depositStake={depositStake}
         />
       ) : null}

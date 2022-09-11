@@ -1,17 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Link from "next/link";
-import React from "react";
-import {
-  Flex,
-  Box,
-  Spinner,
-  Heading,
-  Link as ChakraLink,
-  useToast,
-} from "@chakra-ui/react";
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Flex, Box, Spinner, Heading, Link, useToast } from "@chakra-ui/react";
 import { ethers, utils } from "ethers";
-import styled from "@emotion/styled";
+// import styled from "@emotion/styled";
 
 import {
   getMinimumStake,
@@ -34,22 +25,12 @@ import { HeaderOne } from "../shared/Header0ne";
 import { DeployCohortButton } from "../shared/DeployCohortButton";
 
 export default function Home() {
-  const context = useContext(AppContext);
+  const appContext = useContext(AppContext);
   const toast = useToast();
 
-  const [minimumStake, setMinimumStake] = useState(0);
   const [riteBalance, setRiteBalance] = useState(0);
-  const [raidBalance, setRaidBalance] = useState(0);
   const [stakeDeadline, setStakeDeadline] = useState(0);
-  const [allowance, setAllowance] = useState(0);
-
   const [isLoading, setIsLoading] = useState(false);
-  const [isApproveTxPending, setIsApproveTxPending] = useState(false);
-  const [isStakeTxPending, setIsStakeTxPending] = useState(false);
-
-  const [isChecked, setIsChecked] = useState(false);
-  const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
-  const [cohortAddress, setCohortAddress] = useState("");
 
   const initialFetch = async () => {
     setIsLoading(true);
@@ -59,9 +40,9 @@ export default function Home() {
 
   const fetchRiteBalance = async () => {
     const _riteBalance = await getTokenBalance(
-      context.ethersProvider,
-      context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      appContext.ethersProvider,
+      appContext.signerAddress,
+      CONTRACT_ADDRESSES[appContext.chainId].riteOfMolochAddress
     );
 
     if (_riteBalance > 0) {
@@ -76,9 +57,9 @@ export default function Home() {
 
   const fetchStakeDeadline = async () => {
     const _stakeDeadline = await getStakeDeadline(
-      context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-      context.signerAddress
+      appContext.ethersProvider,
+      CONTRACT_ADDRESSES[appContext.chainId].riteOfMolochAddress,
+      appContext.signerAddress
     );
     // setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // for rinkeby testing
     setStakeDeadline(Number(_stakeDeadline));
@@ -86,27 +67,27 @@ export default function Home() {
 
   const fetchMinimumStake = async () => {
     const _stake = await getMinimumStake(
-      context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      appContext.ethersProvider,
+      CONTRACT_ADDRESSES[appContext.chainId].riteOfMolochAddress
     );
     setMinimumStake(_stake);
   };
 
   const fetchAllowance = async () => {
     const _allowance = await getAllowance(
-      context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
-      context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      appContext.ethersProvider,
+      CONTRACT_ADDRESSES[appContext.chainId].erc20TokenAddress,
+      appContext.signerAddress,
+      CONTRACT_ADDRESSES[appContext.chainId].riteOfMolochAddress
     );
     setAllowance(_allowance);
   };
 
   const fetchRaidBalance = async () => {
     const _raidBalance = await getTokenBalance(
-      context.ethersProvider,
-      context.signerAddress,
-      CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress
+      appContext.ethersProvider,
+      appContext.signerAddress,
+      CONTRACT_ADDRESSES[appContext.chainId].erc20TokenAddress
     );
     setRaidBalance(_raidBalance);
   };
@@ -126,34 +107,26 @@ export default function Home() {
           width="auto"
         >
           <i className="fa-solid fa-circle-info"></i> View your{" "}
-          <ChakraLink
-            href={`${EXPLORER_URLS[context.chainId]}/tx/${txHash}`}
+          <Link
+            href={`${EXPLORER_URLS[appContext.chainId]}/tx/${txHash}`}
             isExternal
             textDecoration="underline"
             cursor="pointer"
           >
             transaction
-          </ChakraLink>
+          </Link>
         </Box>
       ),
     });
-  };
-
-  const handleIsChecked = () => {
-    setIsChecked(!isChecked);
-  };
-
-  const handleCohortAddress = (e) => {
-    setCohortAddress(e.target.value);
   };
 
   const makeAnAllowance = async () => {
     setIsApproveTxPending(true);
     try {
       const tx = await approveRaid(
-        context.ethersProvider,
-        CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
-        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
+        appContext.ethersProvider,
+        CONTRACT_ADDRESSES[appContext.chainId].erc20TokenAddress,
+        CONTRACT_ADDRESSES[appContext.chainId].riteOfMolochAddress,
         minimumStake
       );
       if (tx) {
@@ -206,9 +179,11 @@ export default function Home() {
     setIsStakeTxPending(true);
     try {
       const tx = await joinInitiation(
-        context.ethersProvider,
-        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        cohortAddress != "" && isChecked ? cohortAddress : context.signerAddress
+        appContext.ethersProvider,
+        CONTRACT_ADDRESSES[appContext.chainId].riteOfMolochAddress,
+        cohortAddress != "" && isChecked
+          ? cohortAddress
+          : appContext.signerAddress
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -240,10 +215,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (context.chainId in SUPPORTED_NETWORK_IDS) {
+    if (appContext.chainId in SUPPORTED_NETWORK_IDS) {
       initialFetch();
     }
-  }, [context.chainId]);
+  }, [appContext.chainId]);
 
   const canStake =
     utils.formatUnits(allowance, "ether") >=
@@ -260,7 +235,7 @@ export default function Home() {
     : "Your RAID balance is too low";
 
   const show =
-    context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;
+    appContext.signerAddress && appContext.chainId in SUPPORTED_NETWORK_IDS;
 
   return (
     <Flex
@@ -273,13 +248,12 @@ export default function Home() {
     >
       <HeaderOne />
       <CohortHeader />
-      {!context.signerAddress && <PreStake />}
+      {!appContext.signerAddress && <PreStake />}
 
-      {!context.signerAddress ? <DeployCohortButton /> : null}
+      {!appContext.signerAddress ? <DeployCohortButton /> : null}
 
-      {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
-        <NetworkError />
-      )}
+      {appContext.signerAddress &&
+        !(appContext.chainId in SUPPORTED_NETWORK_IDS) && <NetworkError />}
 
       {isLoading && <Spinner color="red" size="xl" />}
 
@@ -291,41 +265,18 @@ export default function Home() {
         {!isLoading &&
           (riteBalance > 0 ? (
             <RiteStaked
-              setDisplaySponsorCohort={setDisplaySponsorCohort}
-              displaySponsorCohort={displaySponsorCohort}
               balance={riteBalance}
               deadline={stakeDeadline}
-              minimumStake={minimumStake}
-              context={context}
-              raidBalance={raidBalance}
-              allowance={allowance}
-              isChecked={isChecked}
-              handleIsChecked={handleIsChecked}
-              cohortAddress={cohortAddress}
-              handleCohortAddress={handleCohortAddress}
-              isApproveTxPending={isApproveTxPending}
               makeAnAllowance={makeAnAllowance}
               canStake={canStake}
               canNotStakeTooltipLabel={canNotStakeTooltipLabel}
-              isStakeTxPending={isStakeTxPending}
               depositStake={depositStake}
             />
           ) : (
             <StakingFlow
-              displaySponsorCohort={displaySponsorCohort}
-              minimumStake={minimumStake}
-              context={context}
-              raidBalance={raidBalance}
-              allowance={allowance}
-              isChecked={isChecked}
-              handleIsChecked={handleIsChecked}
-              cohortAddress={cohortAddress}
-              handleCohortAddress={handleCohortAddress}
-              isApproveTxPending={isApproveTxPending}
               makeAnAllowance={makeAnAllowance}
               canStake={canStake}
               canNotStakeTooltipLabel={canNotStakeTooltipLabel}
-              isStakeTxPending={isStakeTxPending}
               depositStake={depositStake}
             />
           ))}
