@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useContext } from "react";
-import { useRouter } from "next/router";
 
 import { AppContext } from "../context/AppContext";
 import { useWallet } from "../hooks/useWallet";
@@ -26,7 +25,6 @@ const getAccountString = (account) => {
 export const Header = () => {
   const context = useContext(AppContext);
   const { connectWallet, disconnect } = useWallet();
-  const router = useRouter();
 
   return (
     <Flex
@@ -43,23 +41,9 @@ export const Header = () => {
             alt="logo"
             w={{ base: 8, lg: 12 }}
           />
-          {router.pathname === "/deploy-cohort" ? (
-            <Text
-              color="red"
-              fontFamily="uncial"
-              fontSize={{ base: 16, lg: 24 }}
-            >
-              Moloch Cohort Deployer
-            </Text>
-          ) : (
-            <Text
-              color="red"
-              fontFamily="uncial"
-              fontSize={{ base: 16, lg: 24 }}
-            >
-              Rite of Moloch
-            </Text>
-          )}
+          <Text color="red" fontFamily="uncial" fontSize={{ base: 16, lg: 24 }}>
+            Rite of Moloch
+          </Text>
         </Flex>
       </Link>
 
