@@ -1,9 +1,11 @@
 import React from "react";
 import { useCountdown } from "../hooks/useCountdown";
-import { Box, Flex, Text, Image, Heading } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, useMediaQuery, Grid } from "@chakra-ui/react";
 import { sixMonthsInSeconds } from "../utils/constants";
 
 export const CountdownTimer = ({ targetDate }) => {
+  const [isLargerThan580] = useMediaQuery("(min-width: 580px)");
+
   const [days, hours, minutes, seconds, secondsLeft] = useCountdown(targetDate);
 
   const color = `hsl(347, ${Math.floor(
@@ -45,15 +47,30 @@ const ShowCounter = ({ days, hours, minutes, seconds, color }) => {
       justifyContent="space-between"
       py={3}
       bgColor="rgb(71 52 89 / 16%)"
-      w="md"
+      w={{
+        base: "small",
+        md: "md",
+      }}
       padding="0.75rem"
       borderRadius="5px"
-      gap={6}
+      gap={{
+        base: 2,
+        md: 6,
+      }}
       mt={6}
     >
       {/* <Image src='/assets/citipati.png' alt='citipati' w={16} opacity={0.13} /> */}
       <Image src="/assets/hourglass.png" alt="citipati" w={12} opacity={0.13} />
-      <Flex gap={6}>
+      <Grid
+        gap={{
+          base: 3,
+          md: 6,
+        }}
+        templateColumns={{
+          base: "repeat(2, 1fr)",
+          md: "repeat(4, 1fr)",
+        }}
+      >
         <DateTimeDisplay
           value={days}
           type="D"
@@ -78,7 +95,7 @@ const ShowCounter = ({ days, hours, minutes, seconds, color }) => {
           isDanger={false}
           color={color}
         />
-      </Flex>
+      </Grid>
       <Image src="/assets/hourglass.png" alt="citipati" w={12} opacity={0.13} />
       {/* <Image src='/assets/triskele.png' alt='citipati' w={16} opacity={0.13} /> */}
     </Flex>

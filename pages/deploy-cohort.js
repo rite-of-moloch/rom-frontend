@@ -7,15 +7,13 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Heading,
   Button,
 } from "@chakra-ui/react";
 import { React, useState, useEffect, useContext } from "react";
 import { AppContext } from "../context/AppContext";
-import { ethers, Contract, utils, BigNumber } from "ethers";
+import { Contract, utils } from "ethers";
 import { CONTRACT_ADDRESSES } from "../utils/constants";
 import { HeaderOne } from "../shared/Header0ne";
-import { DeployCohortButton } from "../shared/DeployCohortButton";
 
 export default function deployCohort() {
   const [membershipCriteria, setMembershipCriteria] = useState("");
@@ -120,7 +118,7 @@ export default function deployCohort() {
       <FormControl display={!!userSignedIn ? "" : "none"}>
         <Flex alignItems="center" justifyContent="center">
           <SimpleGrid
-            columns={2}
+            columns={{ base: 1, md: 2 }}
             spacingX={20}
             spacingY={6}
             width="75%"

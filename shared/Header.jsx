@@ -8,9 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import styled from "@emotion/styled";
 import { useContext } from "react";
-import { useRouter } from "next/router";
 
 import { AppContext } from "../context/AppContext";
 import { useWallet } from "../hooks/useWallet";
@@ -24,20 +22,9 @@ const getAccountString = (account) => {
     .toUpperCase()}`;
 };
 
-const StyledPrimaryButton = styled(Button)`
-  min-width: 160px;
-  height: 50px;
-  text-transform: uppercase;
-  color: black;
-  border-radius: 2px;
-  padding-left: 24px;
-  padding-right: 24px;
-`;
-
 export const Header = () => {
   const context = useContext(AppContext);
   const { connectWallet, disconnect } = useWallet();
-  const router = useRouter();
 
   return (
     <Flex
@@ -48,47 +35,44 @@ export const Header = () => {
       px="2rem"
     >
       <Link href="/" passHref>
-        <Flex alignItems="center" cursor="pointer">
+        <Flex alignItems="center" cursor="pointer" gap={3}>
           <Image
             src="/assets/logos/swords.webp"
             alt="logo"
-            w={{ lg: "50px", sm: "25px" }}
+            w={{ base: 8, lg: 12 }}
           />
-          {router.pathname === "/deploy-cohort" ? (
-            <Text
-              color="red"
-              fontFamily="uncial"
-              fontSize={{ lg: "1.5rem", sm: "1rem" }}
-              ml="5px"
-            >
-              Moloch Cohort Deployer
-            </Text>
-          ) : (
-            <Text
-              color="red"
-              fontFamily="uncial"
-              fontSize={{ lg: "1.5rem", sm: "1rem" }}
-              ml="5px"
-            >
-              Rite of Moloch
-            </Text>
-          )}
+          <Text color="red" fontFamily="uncial" fontSize={{ base: 16, lg: 24 }}>
+            Rite of Moloch
+          </Text>
         </Flex>
       </Link>
 
       {!context.signerAddress && (
-        <StyledPrimaryButton
+        <Button
           bg="red"
+          borderRadius={2}
+          color="black"
           onClick={connectWallet}
           fontFamily="spaceMono"
+          h={{ base: 8, lg: 12 }}
+          px={{ base: 4, md: 10 }}
+          fontSize={{ base: 14, lg: 18 }}
         >
           CONNECT
-        </StyledPrimaryButton>
+        </Button>
       )}
 
       {context.signerAddress && (
-        <Flex justify="center" align="center" zIndex={5} fontFamily="jetbrains">
-          <Text color="white" fontFamily="jetbrains" mr="1rem" fontSize=".8rem">
+        <Flex
+          justify="center"
+          align="center"
+          zIndex={5}
+          fontFamily="jetbrains"
+          gap={3}
+          direction="column-reverse"
+          flexDir={{ md: "row" }}
+        >
+          <Text color="white" fontFamily="jetbrains" fontSize={14}>
             {SUPPORTED_NETWORK_IDS[context.chainId]}
           </Text>
           <Popover placement="bottom">
@@ -98,7 +82,7 @@ export const Header = () => {
                 bg="blackDark"
                 fontWeight="normal"
                 _hover={{ opacity: "0.8" }}
-                p={{ base: 0, md: 3 }}
+                p={{ base: 1, md: 3 }}
               >
                 <Text px={2} display={{ md: "flex" }} color="red">
                   {getAccountString(context.signerAddress)}
