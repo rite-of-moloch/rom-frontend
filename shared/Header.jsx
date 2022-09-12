@@ -37,7 +37,7 @@ export const Header = () => {
       px="2rem"
     >
       <Link href="/" passHref>
-        <Flex alignItems="center" cursor="pointer">
+        <Flex alignItems="center" cursor="pointer" gap={3}>
           <Image
             src="/assets/logos/swords.webp"
             alt="logo"
@@ -48,7 +48,6 @@ export const Header = () => {
               color="red"
               fontFamily="uncial"
               fontSize={{ base: 16, lg: 24 }}
-              ml="5px"
             >
               Moloch Cohort Deployer
             </Text>
@@ -57,7 +56,6 @@ export const Header = () => {
               color="red"
               fontFamily="uncial"
               fontSize={{ base: 16, lg: 24 }}
-              ml="5px"
             >
               Rite of Moloch
             </Text>
@@ -72,7 +70,9 @@ export const Header = () => {
           color="black"
           onClick={connectWallet}
           fontFamily="spaceMono"
+          h={{ base: 8, lg: 12 }}
           px={{ base: 4, md: 10 }}
+          fontSize={{ base: 14, lg: 18 }}
         >
           CONNECT
         </Button>
@@ -84,11 +84,11 @@ export const Header = () => {
           align="center"
           zIndex={5}
           fontFamily="jetbrains"
-          gap={2}
+          gap={3}
           direction="column-reverse"
           flexDir={{ md: "row" }}
         >
-          <Text color="white" fontFamily="jetbrains" mr="1rem" fontSize=".8rem">
+          <Text color="white" fontFamily="jetbrains" fontSize={14}>
             {SUPPORTED_NETWORK_IDS[context.chainId]}
           </Text>
           <Popover placement="bottom">
@@ -98,7 +98,7 @@ export const Header = () => {
                 bg="blackDark"
                 fontWeight="normal"
                 _hover={{ opacity: "0.8" }}
-                p={{ base: 0, md: 3 }}
+                p={{ base: 1, md: 3 }}
               >
                 <Text px={2} display={{ md: "flex" }} color="red">
                   {getAccountString(context.signerAddress)}
