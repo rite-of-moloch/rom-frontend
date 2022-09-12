@@ -8,7 +8,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import styled from "@emotion/styled";
 import { useContext } from "react";
 import { useRouter } from "next/router";
 
@@ -23,16 +22,6 @@ const getAccountString = (account) => {
     .substr(len - 3, len - 1)
     .toUpperCase()}`;
 };
-
-const StyledPrimaryButton = styled(Button)`
-  min-width: 160px;
-  height: 50px;
-  text-transform: uppercase;
-  color: black;
-  border-radius: 2px;
-  padding-left: 24px;
-  padding-right: 24px;
-`;
 
 export const Header = () => {
   const context = useContext(AppContext);
@@ -52,13 +41,13 @@ export const Header = () => {
           <Image
             src="/assets/logos/swords.webp"
             alt="logo"
-            w={{ lg: "50px", sm: "25px" }}
+            w={{ base: 8, lg: 12 }}
           />
           {router.pathname === "/deploy-cohort" ? (
             <Text
               color="red"
               fontFamily="uncial"
-              fontSize={{ lg: "1.5rem", sm: "1rem" }}
+              fontSize={{ base: 16, lg: 24 }}
               ml="5px"
             >
               Moloch Cohort Deployer
@@ -67,7 +56,7 @@ export const Header = () => {
             <Text
               color="red"
               fontFamily="uncial"
-              fontSize={{ lg: "1.5rem", sm: "1rem" }}
+              fontSize={{ base: 16, lg: 24 }}
               ml="5px"
             >
               Rite of Moloch
@@ -77,17 +66,28 @@ export const Header = () => {
       </Link>
 
       {!context.signerAddress && (
-        <StyledPrimaryButton
+        <Button
           bg="red"
+          borderRadius={2}
+          color="black"
           onClick={connectWallet}
           fontFamily="spaceMono"
+          px={{ base: 4, md: 10 }}
         >
           CONNECT
-        </StyledPrimaryButton>
+        </Button>
       )}
 
       {context.signerAddress && (
-        <Flex justify="center" align="center" zIndex={5} fontFamily="jetbrains">
+        <Flex
+          justify="center"
+          align="center"
+          zIndex={5}
+          fontFamily="jetbrains"
+          gap={2}
+          direction="column-reverse"
+          flexDir={{ md: "row" }}
+        >
           <Text color="white" fontFamily="jetbrains" mr="1rem" fontSize=".8rem">
             {SUPPORTED_NETWORK_IDS[context.chainId]}
           </Text>

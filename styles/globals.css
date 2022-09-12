@@ -27,5 +27,11 @@ html {
 }
 
 .web3modal-modal-card {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
+}
+
+body {
+  min-height: 100% !important;
+  position: relative;
+  min-height: 100%;
 }

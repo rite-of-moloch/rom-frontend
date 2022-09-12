@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Link from "next/link";
 import React from "react";
 import {
   Flex,
   Box,
   Spinner,
-  Heading,
   Link as ChakraLink,
   useToast,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
 import { ethers, utils } from "ethers";
-import styled from "@emotion/styled";
 
 import {
   getMinimumStake,
@@ -285,6 +282,7 @@ export default function Home() {
 
       <Flex
         opacity={!show || isLoading ? 0 : 1}
+        display={!show || isLoading ? "none" : "flex"}
         transition="opacity 0.25s"
         w="100%"
       >
