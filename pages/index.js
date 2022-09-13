@@ -17,6 +17,8 @@ import {
   getAllowance,
   approveRaid,
   joinInitiation,
+  claimStake,
+  isMember,
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
@@ -46,6 +48,7 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false);
   const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
   const [cohortAddress, setCohortAddress] = useState("");
+  const [guildMember, setGuildMember] = useState(false);
 
   const initialFetch = async () => {
     setIsLoading(true);
@@ -63,11 +66,11 @@ export default function Home() {
     if (_riteBalance > 0) {
       setRiteBalance(_riteBalance);
       await fetchStakeDeadline();
-    } else {
-      await fetchMinimumStake();
-      await fetchAllowance();
-      await fetchRaidBalance();
     }
+    await fetchMinimumStake();
+    await fetchAllowance();
+    await fetchRaidBalance();
+    await fetchMembership();
   };
 
   const fetchStakeDeadline = async () => {
@@ -105,6 +108,22 @@ export default function Home() {
       CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress
     );
     setRaidBalance(_raidBalance);
+  };
+
+  const fetchMembership = async () => {
+    const _isMember = await isMember(
+      context.ethersProvider,
+      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
+      context.signerAddress
+    );
+    setGuildMember(_isMember);
+  };
+
+  const claim = async () => {
+    return await claimStake(
+      context.ethersProvider,
+      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+    );
   };
 
   const triggerToast = (txHash) => {
@@ -303,6 +322,8 @@ export default function Home() {
               canNotStakeTooltipLabel={canNotStakeTooltipLabel}
               isStakeTxPending={isStakeTxPending}
               depositStake={depositStake}
+              claim={claim}
+              guildMember={guildMember}
             />
           ) : (
             <StakingFlow

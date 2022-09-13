@@ -1,9 +1,7 @@
-import { React, useState, useEffect } from "react";
-import { ethers } from "ethers";
+import { React } from "react";
 import { Flex, VStack, Image, Text, Checkbox, Button } from "@chakra-ui/react";
 import { CountdownTimer } from "./CountdownTimer";
 import { StakingFlow } from "./StakingFlow";
-import { CONTRACT_ADDRESSES } from "../utils/constants";
 import styled from "@emotion/styled";
 
 const StyledButton = styled(Button)`
@@ -33,30 +31,12 @@ export const RiteStaked = ({
   canNotStakeTooltipLabel,
   isStakeTxPending,
   depositStake,
+  claim,
+  guildMember,
 }) => {
-  const [guildMember, setGuildMember] = useState(false);
-
-  const provider = context.ethersProvider;
-  const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
-  const ABI_INTERFACE = [
-    "function isMember(address user) public view returns (bool memberStatus)",
-    "function claimStake() external",
-  ];
-  const signer = provider.getSigner();
-  const contract = new ethers.Contract(address, ABI_INTERFACE, signer);
-
-  const claimStake = () => {
-    contract.claimStake();
-  };
-
   const handleSponsorCohort = () => {
     setDisplaySponsorCohort(!displaySponsorCohort);
   };
-
-  useEffect(() => {
-    const member = contract.isMember(context.signerAddress);
-    member === true ? setGuildMember(true) : null;
-  }, []);
 
   return (
     <Flex
@@ -85,7 +65,7 @@ export const RiteStaked = ({
       {guildMember ? (
         <VStack>
           <Text mb="2em" textAlign="center" color="white">
-            You’re an official Raid Guild member! <br />
+            You're an official Raid Guild member! <br />
             Claim your cohort stake back, soldier...
           </Text>
           <StyledButton
@@ -93,7 +73,7 @@ export const RiteStaked = ({
             border="2px solid"
             borderColor="red"
             color="red"
-            onClick={claimStake}
+            onClick={claim}
             _hover={{
               opacity: 0.8,
             }}
