@@ -12,8 +12,6 @@ export const RiteStaked = ({
   context,
   raidBalance,
   allowance,
-  isChecked,
-  handleIsChecked,
   cohortAddress,
   handleCohortAddress,
   isApproveTxPending,
@@ -64,15 +62,14 @@ export const RiteStaked = ({
       </Flex>
       {displaySponsorCohort ? (
         <StakingFlow
+          handleSponsorCohort={handleSponsorCohort}
           minimumStake={minimumStake}
           context={context}
           raidBalance={raidBalance}
           allowance={allowance}
-          isChecked={isChecked}
           displaySponsorCohort={displaySponsorCohort}
           checkboxDisplay={displaySponsorCohort ? "none" : null}
           sponsorCohortTextDisplay={displaySponsorCohort ? "none" : null}
-          handleIsChecked={handleIsChecked}
           cohortAddress={cohortAddress}
           handleCohortAddress={handleCohortAddress}
           isApproveTxPending={isApproveTxPending}
