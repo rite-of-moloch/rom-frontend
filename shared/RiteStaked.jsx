@@ -54,9 +54,14 @@ export const RiteStaked = ({
   };
 
   useEffect(() => {
-    const member = contract.isMember(context.signerAddress);
-    if (member === true) setGuildMember(true);
-    else console.log("not member");
+    // const member = contract.isMember(context.signerAddress);
+    const member = contract.isMember(
+      "0x6dd33c46a67275396c070cd2f1eda4de2df18d91"
+    );
+    if (member === true) {
+      console.log("RG member");
+      setGuildMember(true);
+    } else console.log("not member");
   }, []);
 
   return (
