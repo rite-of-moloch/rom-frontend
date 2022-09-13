@@ -34,7 +34,7 @@ export const RiteStaked = ({
   isStakeTxPending,
   depositStake,
 }) => {
-  const [guildMember, setGuildMember] = useState(true);
+  const [guildMember, setGuildMember] = useState(false);
 
   const provider = context.ethersProvider;
   const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
