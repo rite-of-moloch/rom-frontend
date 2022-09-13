@@ -2,7 +2,7 @@ import React, { useState, createContext } from "react";
 
 const StakingContext = createContext();
 
-const StakingContextProvider = ({ children }) => {
+function StakingContextProvider({ children }) {
   const [minimumStake, setMinimumStake] = useState(0);
   const [raidBalance, setRaidBalance] = useState(0);
   const [allowance, setAllowance] = useState(0);
@@ -58,6 +58,6 @@ const StakingContextProvider = ({ children }) => {
   return (
     <StakingContext.Provider value={value}>{children}</StakingContext.Provider>
   );
-};
+}
 
 export { StakingContext, StakingContextProvider };

@@ -8,7 +8,7 @@ import { AppContext } from "../context/AppContext";
 import { WEB3_MODAL_OPTIONS } from "../config";
 
 const web3Modal =
-  typeof window !== "undefined" ? new Web3Modal(WEB3_MODAL_OPTIONS) : null;
+  typeof window !== "undefined" ? new Web3Modal(WEB3_MODAL_OPTIONS) : null; 
 
 export const useWallet = () => {
   const context = useContext(AppContext);

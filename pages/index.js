@@ -3,6 +3,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { Flex, Box, Spinner, Link, useToast } from "@chakra-ui/react";
 import { ethers, utils } from "ethers";
 // import styled from "@emotion/styled";
+import { AppContext } from "../context/AppContext";
+import { StakingContext } from "../context/StakingContext";
 
 import {
   getMinimumStake,
@@ -13,8 +15,6 @@ import {
   joinInitiation,
 } from "../utils/web3";
 
-import { AppContext } from "../context/AppContext";
-import { StakingContext } from "../context/StakingContext";
 import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 import { SUPPORTED_NETWORK_IDS } from "../config";
 import { NetworkError } from "../shared/NetworkError";
