@@ -65,6 +65,7 @@ export const RiteStaked = ({
       alignItems="center"
       justifyContent="space-between"
       p="15px"
+      mb="4em"
     >
       <Image
         src="/assets/season-v-token.svg"
