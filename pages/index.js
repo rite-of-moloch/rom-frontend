@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Link from "next/link";
 import React from "react";
 import {
   Flex,
   Box,
   Spinner,
-  Heading,
   Link as ChakraLink,
   useToast,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext } from "react";
 import { ethers, utils } from "ethers";
-import styled from "@emotion/styled";
 
 import {
   getMinimumStake,
@@ -31,7 +28,6 @@ import { StakingFlow } from "../shared/StakingFlow";
 import { CohortHeader } from "../shared/CohortHeader";
 import { PreStake } from "../shared/PreStake";
 import { HeaderOne } from "../shared/Header0ne";
-import { DeployCohortButton } from "../shared/DeployCohortButton";
 
 export default function Home() {
   const context = useContext(AppContext);
@@ -274,8 +270,6 @@ export default function Home() {
       <HeaderOne />
       <CohortHeader />
       {!context.signerAddress && <PreStake />}
-
-      {!context.signerAddress ? <DeployCohortButton /> : null}
 
       {context.signerAddress && !(context.chainId in SUPPORTED_NETWORK_IDS) && (
         <NetworkError />

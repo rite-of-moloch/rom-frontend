@@ -10,7 +10,6 @@ import {
   Checkbox,
   Input,
   Tooltip,
-  Link,
 } from "@chakra-ui/react";
 import { utils } from "ethers";
 import styled from "@emotion/styled";
@@ -160,19 +159,6 @@ export const StakingFlow = ({
           </Box>
         </Tooltip>
       </SimpleGrid>
-      <Flex
-        color="white"
-        mt="2rem"
-        mx="auto"
-        p="0.5rem"
-        textDecoration="underline"
-        textUnderlineOffset="4px"
-        _hover={{ cursor: "pointer" }}
-      >
-        <Link href="/deploy-cohort">
-          <Text>Click Here To Deploy Your Own Cohort</Text>
-        </Link>
-      </Flex>
     </Flex>
   );
 };
