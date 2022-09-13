@@ -34,7 +34,7 @@ export const RiteStaked = ({
   isStakeTxPending,
   depositStake,
 }) => {
-  const [guildMember, setGuildMember] = useState(false);
+  const [guildMember, setGuildMember] = useState(true);
 
   const provider = context.ethersProvider;
   const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
@@ -83,8 +83,9 @@ export const RiteStaked = ({
       <CountdownTimer targetDate={new Date(deadline * 1000).getTime()} />
       {guildMember ? (
         <VStack>
-          <Text mb="1em" textAlign="center" color="white">
-            You’re an official Raid Guild member. Claim your cohort stake back
+          <Text mb="2em" textAlign="center" color="white">
+            You’re an official Raid Guild member! <br />
+            Claim your cohort stake back, soldier...
           </Text>
           <StyledButton
             bg="transparent"
