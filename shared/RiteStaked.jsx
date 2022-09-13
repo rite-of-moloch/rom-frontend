@@ -1,7 +1,18 @@
-import { React, useState } from "react";
-import { Flex, Image, Text, Checkbox } from "@chakra-ui/react";
+import { React, useState, useEffect } from "react";
+import { ethers } from "ethers";
+import { Flex, VStack, Image, Text, Checkbox, Button } from "@chakra-ui/react";
 import { CountdownTimer } from "./CountdownTimer";
 import { StakingFlow } from "./StakingFlow";
+import { CONTRACT_ADDRESSES } from "../utils/constants";
+import styled from "@emotion/styled";
+
+const StyledButton = styled(Button)`
+  height: 50px;
+  width: auto;
+  border-radius: "2px";
+  padding-left: "24px";
+  padding-right: "24px";
+`;
 
 export const RiteStaked = ({
   displaySponsorCohort,
@@ -23,9 +34,30 @@ export const RiteStaked = ({
   isStakeTxPending,
   depositStake,
 }) => {
+  const [guildMember, setGuildMember] = useState(false);
+
+  const provider = context.ethersProvider;
+  const address = CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress;
+  const ABI_INTERFACE = [
+    "function isMember(address user) public view returns (bool memberStatus)",
+    "function claimStake() external",
+  ];
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(address, ABI_INTERFACE, signer);
+
+  const claimStake = () => {
+    contract.claimStake();
+  };
+
   const handleSponsorCohort = () => {
     setDisplaySponsorCohort(!displaySponsorCohort);
   };
+
+  useEffect(() => {
+    const member = contract.isMember(context.signerAddress);
+    if (member === true) setGuildMember(true);
+    else console.log("not member");
+  }, []);
 
   return (
     <Flex
@@ -50,7 +82,25 @@ export const RiteStaked = ({
         Deadline - {new Date(deadline * 1000).toLocaleString()}
       </Text>
       <CountdownTimer targetDate={new Date(deadline * 1000).getTime()} />
-
+      {guildMember ? (
+        <VStack>
+          <Text mb="1em" textAlign="center" color="white">
+            You’re an official Raid Guild member. Claim your cohort stake back
+          </Text>
+          <StyledButton
+            bg="transparent"
+            border="2px solid"
+            borderColor="red"
+            color="red"
+            onClick={claimStake}
+            _hover={{
+              opacity: 0.8,
+            }}
+          >
+            Claim Stake
+          </StyledButton>
+        </VStack>
+      ) : null}
       <Flex
         flexDirection="row"
         alignItems="center"
