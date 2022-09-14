@@ -70,7 +70,7 @@ export default function Home() {
     await fetchMinimumStake();
     await fetchAllowance();
     await fetchRaidBalance();
-    await fetchMembership();
+    // await fetchMembership();
   };
 
   const fetchStakeDeadline = async () => {
@@ -116,14 +116,44 @@ export default function Home() {
       CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
       context.signerAddress
     );
+    console.log(_isMember);
     setGuildMember(_isMember);
   };
 
   const claim = async () => {
-    return await claimStake(
-      context.ethersProvider,
-      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
-    );
+    setIsStakeTxPending(true);
+    try {
+      const tx = await claimStake(
+        context.ethersProvider,
+        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      );
+      if (tx) {
+        triggerToast(tx.hash);
+        const { status } = await tx.wait();
+        if (status === 1) {
+          await fetchRiteBalance();
+        } else {
+          toast({
+            position: "bottom-left",
+            render: () => (
+              <Box color="white" p={3} bg="red.500">
+                Transaction failed.
+              </Box>
+            ),
+          });
+        }
+      }
+    } catch (err) {
+      toast({
+        position: "bottom-left",
+        render: () => (
+          <Box color="white" p={3} bg="red.500">
+            {err.message}
+          </Box>
+        ),
+      });
+    }
+    setIsStakeTxPending(false);
   };
 
   const triggerToast = (txHash) => {

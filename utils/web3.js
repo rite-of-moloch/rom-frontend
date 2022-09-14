@@ -86,14 +86,14 @@ export const getAllowance = async (
   return contract.allowance(ownerAddress, spenderAddress);
 };
 
-export const claimStake = async (
-  ethersProvider,
-  contractAddress,
-  userAddress
-) => {
+export const claimStake = async (ethersProvider, contractAddress) => {
   const abiInterface = new utils.Interface(["function claimStake() external"]);
-  const contract = new Contract(contractAddress, abiInterface, ethersProvider);
-  return contract.claimStake();
+  const contract = new Contract(
+    contractAddress,
+    abiInterface,
+    ethersProvider.getSigner()
+  );
+  return contract.claimStake({ gasLimit: 3000000 });
 };
 
 export const isMember = async (
@@ -104,10 +104,6 @@ export const isMember = async (
   const abiInterface = new utils.Interface([
     "function isMember(address user) public view returns (bool)",
   ]);
-  const contract = new Contract(
-    contractAddress,
-    abiInterface,
-    ethersProvider.getSigner()
-  );
+  const contract = new Contract(contractAddress, abiInterface, ethersProvider);
   return contract.isMember(userAddress);
 };
