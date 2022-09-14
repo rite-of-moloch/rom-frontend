@@ -295,14 +295,15 @@ export default function Home() {
     utils.formatUnits(minimumStake, "ether") &&
     utils.formatUnits(raidBalance, "ether") >=
     utils.formatUnits(minimumStake, "ether") &&
-    !ethers.utils.isAddress(cohortAddress);
+    (displaySponsorCohort ? ethers.utils.isAddress(cohortAddress) : true);
 
-  const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
-    ? "Please input a valid wallet address"
-    : utils.formatUnits(allowance, "ether") <
-      utils.formatUnits(minimumStake, "ether")
+  const canNotStakeTooltipLabel = utils.formatUnits(raidBalance, "ether") < utils.formatUnits(minimumStake, "ether")
+    ? "Your RAID balance is too low"
+    : utils.formatUnits(allowance, "ether") < utils.formatUnits(minimumStake, "ether")
       ? "Allowance is smaller than the minimum stake amount."
-      : "Your RAID balance is too low";
+      : (displaySponsorCohort && !ethers.utils.isAddress(cohortAddress))
+        ? "Please input a valid wallet address"
+        : ""
 
   const show =
     context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;

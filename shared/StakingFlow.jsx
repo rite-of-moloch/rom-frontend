@@ -113,7 +113,7 @@ export const StakingFlow = ({
         border="0px"
         opacity="none"
         width="full"
-        mt={!displaySponsorCohort ? "1rem" : "-1rem"}
+        mt={displaySponsorCohort ? "1rem" : "-1rem"}
         fontSize="sm"
       />
       <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
