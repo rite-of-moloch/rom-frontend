@@ -62,7 +62,7 @@ export const RiteStaked = ({
         Deadline - {new Date(deadline * 1000).toLocaleString()}
       </Text>
       <CountdownTimer targetDate={new Date(deadline * 1000).getTime()} />
-      {!guildMember ? (
+      {guildMember ? (
         <VStack>
           <Text mb="2em" textAlign="center" color="white">
             You're an official Raid Guild member! <br />

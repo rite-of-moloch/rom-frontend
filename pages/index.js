@@ -70,7 +70,7 @@ export default function Home() {
     await fetchMinimumStake();
     await fetchAllowance();
     await fetchRaidBalance();
-    // await fetchMembership();
+    await fetchMembership();
   };
 
   const fetchStakeDeadline = async () => {
