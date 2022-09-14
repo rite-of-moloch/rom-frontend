@@ -1,7 +1,16 @@
-import { React, useState } from "react";
-import { Flex, Image, Text, Checkbox } from "@chakra-ui/react";
+import { React } from "react";
+import { Flex, VStack, Image, Text, Checkbox, Button } from "@chakra-ui/react";
 import { CountdownTimer } from "./CountdownTimer";
 import { StakingFlow } from "./StakingFlow";
+import styled from "@emotion/styled";
+
+const StyledButton = styled(Button)`
+  height: 50px;
+  width: auto;
+  border-radius: "2px";
+  padding-left: "24px";
+  padding-right: "24px";
+`;
 
 export const RiteStaked = ({
   displaySponsorCohort,
@@ -20,6 +29,8 @@ export const RiteStaked = ({
   canNotStakeTooltipLabel,
   isStakeTxPending,
   depositStake,
+  claim,
+  guildMember,
 }) => {
   const handleSponsorCohort = () => {
     setDisplaySponsorCohort(!displaySponsorCohort);
@@ -32,6 +43,7 @@ export const RiteStaked = ({
       alignItems="center"
       justifyContent="space-between"
       p="15px"
+      mb="4em"
     >
       <Image
         src="/assets/season-v-token.svg"
@@ -48,7 +60,26 @@ export const RiteStaked = ({
         Deadline - {new Date(deadline * 1000).toLocaleString()}
       </Text>
       <CountdownTimer targetDate={new Date(deadline * 1000).getTime()} />
-
+      {guildMember ? (
+        <VStack>
+          <Text mb="2em" textAlign="center" color="white">
+            You're an official Raid Guild member! <br />
+            Claim your cohort stake back, soldier...
+          </Text>
+          <StyledButton
+            bg="transparent"
+            border="2px solid"
+            borderColor="red"
+            color="red"
+            onClick={claim}
+            _hover={{
+              opacity: 0.8,
+            }}
+          >
+            Claim Stake
+          </StyledButton>
+        </VStack>
+      ) : null}
       <Flex
         flexDirection="row"
         alignItems="center"

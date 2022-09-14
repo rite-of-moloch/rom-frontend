@@ -17,6 +17,8 @@ import {
   getAllowance,
   approveRaid,
   joinInitiation,
+  claimStake,
+  isMember,
 } from "../utils/web3";
 
 import { AppContext } from "../context/AppContext";
@@ -45,6 +47,7 @@ export default function Home() {
 
   const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
   const [cohortAddress, setCohortAddress] = useState("");
+  const [guildMember, setGuildMember] = useState(false);
 
   const initialFetch = async () => {
     setIsLoading(true);
@@ -62,10 +65,11 @@ export default function Home() {
     if (_riteBalance > 0) {
       setRiteBalance(_riteBalance);
       await fetchStakeDeadline();
-    } 
-      await fetchMinimumStake();
-      await fetchAllowance();
-      await fetchRaidBalance();
+    }
+    await fetchMinimumStake();
+    await fetchAllowance();
+    await fetchRaidBalance();
+    await fetchMembership();
   };
 
   const fetchStakeDeadline = async () => {
@@ -103,6 +107,52 @@ export default function Home() {
       CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress
     );
     setRaidBalance(_raidBalance);
+  };
+
+  const fetchMembership = async () => {
+    const _isMember = await isMember(
+      context.ethersProvider,
+      CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
+      context.signerAddress
+    );
+    console.log(_isMember);
+    setGuildMember(_isMember);
+  };
+
+  const claim = async () => {
+    //setIsStakeTxPending(true);
+    try {
+      const tx = await claimStake(
+        context.ethersProvider,
+        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
+      );
+      if (tx) {
+        triggerToast(tx.hash);
+        const { status } = await tx.wait();
+        if (status === 1) {
+          await fetchRiteBalance();
+        } else {
+          toast({
+            position: "bottom-left",
+            render: () => (
+              <Box color="white" p={3} bg="red.500">
+                Transaction failed.
+              </Box>
+            ),
+          });
+        }
+      }
+    } catch (err) {
+      toast({
+        position: "bottom-left",
+        render: () => (
+          <Box color="white" p={3} bg="red.500">
+            {err.message}
+          </Box>
+        ),
+      });
+    }
+    //setIsStakeTxPending(false);
   };
 
   const triggerToast = (txHash) => {
@@ -300,6 +350,8 @@ export default function Home() {
               canNotStakeTooltipLabel={canNotStakeTooltipLabel}
               isStakeTxPending={isStakeTxPending}
               depositStake={depositStake}
+              claim={claim}
+              guildMember={guildMember}
               handleSponsorCohort={handleSponsorCohort}
             />
           ) : (
