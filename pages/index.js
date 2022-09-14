@@ -45,7 +45,6 @@ export default function Home() {
   const [isApproveTxPending, setIsApproveTxPending] = useState(false);
   const [isStakeTxPending, setIsStakeTxPending] = useState(false);
 
-  const [isChecked, setIsChecked] = useState(false);
   const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
   const [cohortAddress, setCohortAddress] = useState("");
   const [guildMember, setGuildMember] = useState(false);
@@ -184,10 +183,6 @@ export default function Home() {
     });
   };
 
-  const handleIsChecked = () => {
-    setIsChecked(!isChecked);
-  };
-
   const handleCohortAddress = (e) => {
     setCohortAddress(e.target.value);
   };
@@ -231,8 +226,9 @@ export default function Home() {
   };
 
   const depositStake = async () => {
+    console.log('HERE', utils.isAddress(cohortAddress), displaySponsorCohort)
     //Check if cohortAddress is an actual address
-    if (cohortAddress != "" && isChecked) {
+    if (cohortAddress != "" && displaySponsorCohort) {
       if (!utils.isAddress(cohortAddress)) {
         toast({
           position: "bottom-left",
@@ -253,7 +249,7 @@ export default function Home() {
       const tx = await joinInitiation(
         context.ethersProvider,
         CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        cohortAddress != "" && isChecked ? cohortAddress : context.signerAddress
+        cohortAddress != "" && displaySponsorCohort ? cohortAddress : context.signerAddress
       );
       if (tx) {
         triggerToast(tx.hash);
@@ -284,6 +280,10 @@ export default function Home() {
     setIsStakeTxPending(false);
   };
 
+  const handleSponsorCohort = () => {
+    setDisplaySponsorCohort(!displaySponsorCohort);
+  }
+
   useEffect(() => {
     if (context.chainId in SUPPORTED_NETWORK_IDS) {
       initialFetch();
@@ -292,17 +292,17 @@ export default function Home() {
 
   const canStake =
     utils.formatUnits(allowance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
+    utils.formatUnits(minimumStake, "ether") &&
     utils.formatUnits(raidBalance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
+    utils.formatUnits(minimumStake, "ether") &&
     !ethers.utils.isAddress(cohortAddress);
 
   const canNotStakeTooltipLabel = !ethers.utils.isAddress(cohortAddress)
     ? "Please input a valid wallet address"
     : utils.formatUnits(allowance, "ether") <
       utils.formatUnits(minimumStake, "ether")
-    ? "Allowance is smaller than the minimum stake amount."
-    : "Your RAID balance is too low";
+      ? "Allowance is smaller than the minimum stake amount."
+      : "Your RAID balance is too low";
 
   const show =
     context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;
@@ -342,8 +342,6 @@ export default function Home() {
               context={context}
               raidBalance={raidBalance}
               allowance={allowance}
-              isChecked={isChecked}
-              handleIsChecked={handleIsChecked}
               cohortAddress={cohortAddress}
               handleCohortAddress={handleCohortAddress}
               isApproveTxPending={isApproveTxPending}
@@ -354,16 +352,16 @@ export default function Home() {
               depositStake={depositStake}
               claim={claim}
               guildMember={guildMember}
+              handleSponsorCohort={handleSponsorCohort}
             />
           ) : (
             <StakingFlow
+              handleSponsorCohort={handleSponsorCohort}
               displaySponsorCohort={displaySponsorCohort}
               minimumStake={minimumStake}
               context={context}
               raidBalance={raidBalance}
               allowance={allowance}
-              isChecked={isChecked}
-              handleIsChecked={handleIsChecked}
               cohortAddress={cohortAddress}
               handleCohortAddress={handleCohortAddress}
               isApproveTxPending={isApproveTxPending}

@@ -38,8 +38,9 @@ export const StakingFlow = ({
   displaySponsorCohort,
   checkboxDisplay,
   sponsorCohortTextDisplay,
-  isChecked,
-  handleIsChecked,
+  //isChecked,
+  //handleIsChecked,
+  handleSponsorCohort,
   cohortAddress,
   handleCohortAddress,
   isApproveTxPending,
@@ -86,8 +87,8 @@ export const StakingFlow = ({
       >
         <Checkbox
           defaultChecked
-          isChecked={isChecked}
-          onChange={handleIsChecked}
+          isChecked={displaySponsorCohort}
+          onChange={handleSponsorCohort}
           display={checkboxDisplay}
         />
         <Text
@@ -105,7 +106,7 @@ export const StakingFlow = ({
         placeholder="Sponsored initiate's wallet address"
         value={cohortAddress}
         _placeholder={{ color: "white", fontSize: "sm" }}
-        display={isChecked || displaySponsorCohort ? "inline" : "none"}
+        display={displaySponsorCohort ? "inline" : "none"}
         bg="#741739"
         color="white"
         rounded="none"

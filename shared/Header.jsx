@@ -28,7 +28,6 @@ const StyledPrimaryButton = styled(Button)`
   min-width: 160px;
   height: 50px;
   text-transform: uppercase;
-  color: black;
   border-radius: 2px;
   padding-left: 24px;
   padding-right: 24px;
@@ -75,35 +74,54 @@ export const Header = () => {
           )}
         </Flex>
       </Link>
-
       {!context.signerAddress && (
-        <StyledPrimaryButton
-          bg="red"
-          onClick={connectWallet}
-          fontFamily="spaceMono"
-        >
-          CONNECT
-        </StyledPrimaryButton>
+        <Flex gap="4">
+          <Link href={"https://riteofmoloch.gitbook.io/riteofmoloch/"}>
+            <StyledPrimaryButton
+              bg="red"
+              fontFamily="spaceMono"
+              _hover={{ backgroundColor: "purple", color: "white" }}
+            >
+              DOCS
+            </StyledPrimaryButton>
+          </Link>
+          <StyledPrimaryButton
+            bg="red"
+            onClick={connectWallet}
+            fontFamily="spaceMono"
+            _hover={{ backgroundColor: "purple", color: "white" }}
+          >
+            CONNECT
+          </StyledPrimaryButton>
+        </Flex>
       )}
 
       {context.signerAddress && (
-        <Flex justify="center" align="center" zIndex={5} fontFamily="jetbrains">
-          <Text color="white" fontFamily="jetbrains" mr="1rem" fontSize=".8rem">
-            {SUPPORTED_NETWORK_IDS[context.chainId]}
-          </Text>
+        <Flex
+          justify="center"
+          align="center"
+          zIndex={5}
+          gap={4}
+          fontFamily="jetbrains"
+        >
+          <Link href={"https://riteofmoloch.gitbook.io/riteofmoloch/"}>
+            <StyledPrimaryButton
+              bg="red"
+              fontFamily="spaceMono"
+              _hover={{ backgroundColor: "purple", color: "white" }}
+            >
+              DOCS
+            </StyledPrimaryButton>
+          </Link>
           <Popover placement="bottom">
             <PopoverTrigger>
-              <Button
-                h="auto"
-                bg="blackDark"
-                fontWeight="normal"
-                _hover={{ opacity: "0.8" }}
-                p={{ base: 0, md: 3 }}
+              <StyledPrimaryButton
+                backgroundColor={"black"}
+                color={"red"}
+                _hover={{ backgroundColor: "purple", color: "white" }}
               >
-                <Text px={2} display={{ md: "flex" }} color="red">
-                  {getAccountString(context.signerAddress)}
-                </Text>
-              </Button>
+                {getAccountString(context.signerAddress)}
+              </StyledPrimaryButton>
             </PopoverTrigger>
             <PopoverContent bg="none" w="auto" border="none">
               <Button
@@ -112,11 +130,15 @@ export const Header = () => {
                   disconnect();
                 }}
                 mt="5px"
+                _hover={{ backgroundColor: "purple", color: "white" }}
               >
                 Disconnect
               </Button>
             </PopoverContent>
           </Popover>
+          <Text color="white" fontFamily="jetbrains" mr="1rem" fontSize=".8rem">
+            {SUPPORTED_NETWORK_IDS[context.chainId]}
+          </Text>
         </Flex>
       )}
     </Flex>
