@@ -121,7 +121,7 @@ export default function Home() {
   };
 
   const claim = async () => {
-    setIsStakeTxPending(true);
+    //setIsStakeTxPending(true);
     try {
       const tx = await claimStake(
         context.ethersProvider,
@@ -153,7 +153,7 @@ export default function Home() {
         ),
       });
     }
-    setIsStakeTxPending(false);
+    //setIsStakeTxPending(false);
   };
 
   const triggerToast = (txHash) => {
