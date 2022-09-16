@@ -290,20 +290,19 @@ export default function Home() {
     }
   }, [context.chainId]);
 
-  const canStake =
-    utils.formatUnits(allowance, "ether") >=
-    utils.formatUnits(minimumStake, "ether") &&
-    utils.formatUnits(raidBalance, "ether") >=
-    utils.formatUnits(minimumStake, "ether") &&
+  const canStake = allowance && raidBalance && minimumStake && //To not check empty objects
+    allowance.gte(minimumStake) &&
+    raidBalance.gte(minimumStake) &&
     (displaySponsorCohort ? ethers.utils.isAddress(cohortAddress) : true);
 
-  const canNotStakeTooltipLabel = utils.formatUnits(raidBalance, "ether") < utils.formatUnits(minimumStake, "ether")
-    ? "Your RAID balance is too low"
-    : utils.formatUnits(allowance, "ether") < utils.formatUnits(minimumStake, "ether")
-      ? "Allowance is smaller than the minimum stake amount."
-      : (displaySponsorCohort && !ethers.utils.isAddress(cohortAddress))
-        ? "Please input a valid wallet address"
-        : ""
+  const canNotStakeTooltipLabel = allowance && raidBalance && minimumStake && //To not check empty objects
+    (raidBalance.lt(minimumStake, "ether")
+      ? "Your RAID balance is too low"
+      : allowance.lt(minimumStake)
+        ? "Allowance is smaller than the minimum stake amount."
+        : (displaySponsorCohort && !ethers.utils.isAddress(cohortAddress))
+          ? "Please input a valid wallet address"
+          : "");
 
   const show =
     context.signerAddress && context.chainId in SUPPORTED_NETWORK_IDS;
