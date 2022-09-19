@@ -8,20 +8,14 @@ export const HeaderOne = () => {
     <>
       {!context.signerAddress && (
         <VStack justifyContent="center" m="auto" mb="rem">
-          <Heading
-            as="h1"
-            fontFamily="uncial"
-            color="red"
-            textAlign="center"
-            mb="-2rem"
-          >
+          <Heading as="h1" fontFamily="uncial" color="red" textAlign="center">
             SLAY OR BE SLAIN...
           </Heading>
           <Image
             src="assets/SpinningSBT.gif"
             fallbackSrc="assets/season-v-token.svg"
             alt="SLAY OR BE SLAIN..."
-            boxSize="50%"
+            boxSize="250px"
           />
         </VStack>
       )}

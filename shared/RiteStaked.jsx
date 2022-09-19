@@ -38,9 +38,8 @@ export const RiteStaked = ({
       <Image
         src="/assets/SpinningSBT.gif"
         fallbackSrc="assets/season-v-token.svg"
-        w="250px"
+        boxSize="250px"
         borderRadius="20px"
-        mt="-3rem"
         alt="Rite Token"
       />
 
