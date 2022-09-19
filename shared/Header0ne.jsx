@@ -18,7 +18,8 @@ export const HeaderOne = () => {
             SLAY OR BE SLAIN...
           </Heading>
           <Image
-            src="assets/season-v-token.svg"
+            src="assets/SpinningSBT.gif"
+            fallbackSrc="assets/season-v-token.svg"
             alt="SLAY OR BE SLAIN..."
             boxSize="50%"
           />
